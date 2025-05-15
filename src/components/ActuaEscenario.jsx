@@ -1,20 +1,17 @@
-// src/components/ActuaEscenario.jsx
-
 import React, { useState, useEffect } from 'react'
 import { Box, Typography, Button, Grid } from '@mui/material'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
-import escenas from '../escenas'
-import textos from '../textos.js'
+import textos from '../textos'
 
 const ActuaEscenario = () => {
-  // --- Estado de idioma (es / ca) ---
-  const [idioma, setIdioma] = useState(() => {
-    return localStorage.getItem('idioma') || 'ca'
-  })
-  useEffect(() => {
-    localStorage.setItem('idioma', idioma)
-  }, [idioma])
+  // --- Idioma ---
+  const [idioma, setIdioma] = useState(() => localStorage.getItem('idioma') || 'es')
+  useEffect(() => localStorage.setItem('idioma', idioma), [idioma])
+
+  // --- Datos ---
+  const data = textos[idioma]
+  const escenas = data.escenas
 
   // --- Estado de escena, paso y elecciones ---
   const [indiceEscena, setIndiceEscena] = useState(0)
@@ -23,14 +20,13 @@ const ActuaEscenario = () => {
     const saved = localStorage.getItem('elecciones')
     return saved ? JSON.parse(saved) : {}
   })
-  // Persistir elecciones
+
   useEffect(() => {
     localStorage.setItem('elecciones', JSON.stringify(elecciones))
   }, [elecciones])
 
-  // Elección concreta de la escena actual
+  // --- Elección actual ---
   const [eleccion, setEleccion] = useState('')
-  // Al cambiar de escena, recuperar elección previa
   useEffect(() => {
     setEleccion(elecciones[indiceEscena] || '')
   }, [indiceEscena, elecciones])
@@ -39,7 +35,7 @@ const ActuaEscenario = () => {
   const pasoActual = escena.pasos[paso]
   const totalPasos = escena.pasos.length
 
-  // --- Función Avanzar ---
+  // --- Avanzar ---
   const avanzar = (op = '') => {
     if (pasoActual.tipo === 'eleccion') {
       if (!op) return
@@ -52,11 +48,10 @@ const ActuaEscenario = () => {
     } else if (indiceEscena < escenas.length - 1) {
       setIndiceEscena(indiceEscena + 1)
       setPaso(0)
-      // eleccion se recupera por useEffect
     }
   }
 
-  // --- Función Retroceder ---
+  // --- Retroceder ---
   const retroceder = () => {
     if (paso > 0) {
       setPaso(paso - 1)
@@ -65,11 +60,10 @@ const ActuaEscenario = () => {
       const plen = escenas[ne].pasos.length
       setIndiceEscena(ne)
       setPaso(plen - 1)
-      // eleccion se recupera por useEffect
     }
   }
 
-  // --- Indicadores visuales de progreso ---
+  // --- Progreso visual ---
   const renderProgreso = () => (
     <Box display="flex" justifyContent="center" gap={1} mt={4}>
       {Array.from({ length: totalPasos }).map((_, i) => (
@@ -86,7 +80,7 @@ const ActuaEscenario = () => {
     </Box>
   )
 
-  // --- Renderizado de contenido según tipo ---
+  // --- Contenido ---
   const renderContenido = () => {
     if (pasoActual.tipo === 'situacion') {
       return (
@@ -128,14 +122,12 @@ const ActuaEscenario = () => {
         </Grid>
       )
     }
-    // tipo === 'resultado'
+    // resultado
     const resultado = pasoActual.resultados[eleccion]
     if (!resultado) {
       return (
         <Box textAlign="center" mt={4}>
-          <Typography color="error">
-            {textos[idioma].errorSinEleccion}
-          </Typography>
+          <Typography color="error">{data.ui.errorSinEleccion}</Typography>
         </Box>
       )
     }
@@ -157,14 +149,14 @@ const ActuaEscenario = () => {
 
   return (
     <Box sx={{ mt: 4, mx: { xs: '60px', sm: '80px' }, position: 'relative', pb: 8 }}>
-      {/* --- Selector de idioma --- */}
+      {/* Idioma */}
       <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
         <Button size="small" onClick={() => setIdioma(idioma === 'es' ? 'ca' : 'es')}>
           {idioma === 'es' ? 'CAT' : 'ES'}
         </Button>
       </Box>
 
-      {/* --- Título y subtítulo --- */}
+      {/* Título */}
       <Typography variant="h4" align="center" gutterBottom>
         {escena.titulo}
       </Typography>
@@ -172,16 +164,16 @@ const ActuaEscenario = () => {
         {pasoActual.titulo}
       </Typography>
 
-      {/* --- Contenido principal --- */}
+      {/* Contenido */}
       {renderContenido()}
 
-      {/* --- Progreso visual y texto de paso --- */}
+      {/* Progreso */}
       {renderProgreso()}
       <Typography align="center" variant="body2" sx={{ mt: 2 }}>
-        {textos[idioma].pasoTexto(paso + 1, totalPasos)}
+        {data.ui.pasoTexto(paso + 1, totalPasos)}
       </Typography>
 
-      {/* --- Botón ATRÁS --- */}
+      {/* Botones */}
       {!(indiceEscena === 0 && paso === 0) && (
         <Button
           onClick={retroceder}
@@ -196,11 +188,9 @@ const ActuaEscenario = () => {
             display: { xs: 'none', sm: 'flex' }
           }}
         >
-          {textos[idioma].atras}
+          {data.ui.atras}
         </Button>
       )}
-
-      {/* --- Botón SIGUIENTE --- */}
       {(pasoActual.tipo === 'situacion' ||
         (pasoActual.tipo === 'resultado' && indiceEscena < escenas.length - 1)) && (
         <Button
@@ -216,7 +206,7 @@ const ActuaEscenario = () => {
             display: { xs: 'none', sm: 'flex' }
           }}
         >
-          {textos[idioma].siguiente}
+          {data.ui.siguiente}
         </Button>
       )}
     </Box>
