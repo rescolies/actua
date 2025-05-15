@@ -1,0 +1,94 @@
+.contenedor-paso {
+  padding: 2rem;
+  background-color: #f6f5f3;
+  color: #222;
+  font-family: sans-serif;
+  text-align: left;
+  max-width: 900px;
+  margin: auto;
+}
+
+.titulo {
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+}
+
+.barra-progreso {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+}
+
+.paso {
+  color: #ccc;
+}
+
+.paso.activo {
+  color: #222;
+}
+
+.elecciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: space-between;
+}
+
+.opcion {
+  flex: 1 1 30%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.imagen-opcion {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.descripcion {
+  text-align: left;
+  text-transform: uppercase;
+  font-size: 1rem;
+  margin: 0;
+}
+
+.imagen {
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+}
+
+.botones-navegacion {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: space-between;
+}
+
+button {
+  padding: 0.75rem 1.5rem;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+@media (max-width: 768px) {
+  .elecciones {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .opcion {
+    width: 100%;
+  }
+
+  .descripcion {
+    text-align: left;
+  }
+}
