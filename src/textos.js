@@ -108,7 +108,105 @@ const textos = {
             }
           ]
         })()
-      }
+      },
+      {
+        id: 'emocion1',
+        categoria: 'emociones',
+        titulo: '¿CÓMO TE SIENTES?',
+        pictos: [
+          // si quieres pictogramas, p.ej. 'emocion1/picto1.png', …
+        ],
+        pasos: (() => {
+          const base = 'emocion1/'
+          return [
+            // Paso 1
+            {
+              tipo: 'situacion',
+              titulo: 'SITUACIÓN',
+              descripcion: 'Mira la primera imagen y observa la escena.',
+              imagen: base + 'escena1.png'
+            },
+            // Paso 2
+            {
+              tipo: 'situacion',
+              titulo: 'SITUACIÓN',
+              descripcion: 'Ahora mira esta otra parte de la escena.',
+              imagen: base + 'escena2.png'
+            },
+            // Paso 3
+            {
+              tipo: 'situacion',
+              titulo: 'SITUACIÓN',
+              descripcion: 'Fíjate bien en lo que está pasando aquí.',
+              imagen: base + 'escena3.png'
+            },
+            // Paso 4: elección de emoción
+            {
+              tipo: 'eleccion',
+              titulo: '¿QUÉ EMOCIÓN SIENTES?',
+              opciones: [
+                { id: 'feliz',     texto: 'FELIZ',     imagen: base + 'eleccion1.png' },
+                { id: 'triste',    texto: 'TRISTE',    imagen: base + 'eleccion2.png' },
+                { id: 'enfado',    texto: 'ENFADADO',  imagen: base + 'eleccion3.png' },
+                { id: 'asustado',  texto: 'ASUSTADO',  imagen: base + 'eleccion4.png' }
+              ]
+            }
+          ]
+        })()
+        },
+        {
+          id: 'emocion2',
+          categoria: 'emociones',
+          titulo: 'PARTIDO DE FUTBOL',
+          pictos: [
+            // si quieres pictogramas, p.ej. 'emocion1/picto1.png', …
+          ],
+          pasos: (() => {
+            const base = 'emocion2/'
+            return [
+              // Paso 1
+              {
+                tipo: 'situacion',
+                titulo: 'SITUACIÓN',
+                descripcion: 'Mira la primera imagen y observa la escena.',
+                imagen: base + 'escena1.png'
+              },
+              // Paso 2
+              {
+                tipo: 'situacion',
+                titulo: 'SITUACIÓN',
+                descripcion: 'Ahora mira esta otra parte de la escena.',
+                imagen: base + 'escena2.png'
+              },
+              // Paso 3
+              {
+                tipo: 'situacion',
+                titulo: 'SITUACIÓN',
+                descripcion: 'Fíjate bien en lo que está pasando aquí.',
+                imagen: base + 'escena3.png'
+              },
+              // Paso 4
+              {
+                tipo: 'situacion',
+                titulo: 'SITUACIÓN',
+                descripcion: 'Fíjate bien.',
+                imagen: base + 'escena4.png'
+              },
+              // Paso 4: elección de emoción
+              {
+                tipo: 'eleccion',
+                titulo: '¿QUÉ EMOCIÓN SIENTES?',
+                opciones: [
+                  { id: 'feliz',     texto: 'FELIZ',     imagen: base + 'eleccion1.png' },
+                  { id: 'triste',    texto: 'TRISTE',    imagen: base + 'eleccion2.png' },
+                  { id: 'enfado',    texto: 'ENFADADO',  imagen: base + 'eleccion3.png' },
+                  { id: 'confuso',   texto: 'CONFUSO',   imagen: base + 'eleccion4.png' },
+                  { id: 'asustado',  texto: 'ASUSTADO',  imagen: base + 'eleccion5.png' }
+                ]
+              }
+            ]
+          })()
+          },
       // ... aquí podrás añadir más escenas, cada una con su campo `categoria`
     ]
   },
@@ -217,7 +315,92 @@ const textos = {
             }
           ]
         })()
-      }
+      },
+      {
+        id: 'emocion1',
+        categoria: 'emociones',
+        titulo: 'COM ET SENTS?',
+        pictos: [ /* opcional */ ],
+        pasos: (() => {
+          const base = 'emocion1/'
+          return [
+            {
+              tipo: 'situacion',
+              titulo: 'SITUACIÓ',
+              descripcion: 'Mira la primera imatge i observa l’escena.',
+              imagen: base + 'escena1.png'
+            },
+            {
+              tipo: 'situacion',
+              titulo: 'SITUACIÓ',
+              descripcion: 'Ara mira aquesta altra part de l’escena.',
+              imagen: base + 'escena2.png'
+            },
+            {
+              tipo: 'situacion',
+              titulo: 'SITUACIÓ',
+              descripcion: 'Fixa’t bé en el que està passant aquí.',
+              imagen: base + 'escena3.png'
+            },
+            {
+              tipo: 'eleccion',
+              titulo: 'QUINA EMOCIÓ SENTS?',
+              opciones: [
+                { id: 'feliz',    texto: 'FELIÇ',     imagen: base + 'eleccion1.png' },
+                { id: 'triste',   texto: 'TRIST',     imagen: base + 'eleccion2.png' },
+                { id: 'enfado',   texto: 'ENFADAT',   imagen: base + 'eleccion3.png' },
+                { id: 'asustado', texto: 'ESPANTAT',  imagen: base + 'eleccion4.png' }
+              ]
+            }
+          ]
+        })()
+      },
+      {
+        id: 'emocion2',
+        categoria: 'emociones',
+        titulo: 'PARTIT DE FUTBOL',
+        pictos: [ /* opcional */ ],
+        pasos: (() => {
+          const base = 'emocion2/'
+          return [
+            {
+              tipo: 'situacion',
+              titulo: 'SITUACIÓ',
+              descripcion: 'Mira la primera imatge i observa l’escena.',
+              imagen: base + 'escena1.png'
+            },
+            {
+              tipo: 'situacion',
+              titulo: 'SITUACIÓ',
+              descripcion: 'Ara mira aquesta altra part de l’escena.',
+              imagen: base + 'escena2.png'
+            },
+            {
+              tipo: 'situacion',
+              titulo: 'SITUACIÓ',
+              descripcion: 'Fixa’t bé en el que està passant aquí.',
+              imagen: base + 'escena3.png'
+            },
+            {
+              tipo: 'situacion',
+              titulo: 'SITUACIÓ',
+              descripcion: 'Fixa’t hi bé.',
+              imagen: base + 'escena4.png'
+            },
+            {
+              tipo: 'eleccion',
+              titulo: 'QUINA EMOCIÓ SENTS?',
+              opciones: [
+                { id: 'feliz',    texto: 'FELIÇ',     imagen: base + 'eleccion1.png' },
+                { id: 'triste',   texto: 'TRIST',     imagen: base + 'eleccion2.png' },
+                { id: 'enfado',   texto: 'ENFADAT',   imagen: base + 'eleccion3.png' },
+                { id: 'confusió', texto: 'CONFÚS',    imagen: base + 'eleccion4.png' },
+                { id: 'asustado', texto: 'ESPANTAT',  imagen: base + 'eleccion5.png' }
+              ]
+            }
+          ]
+        })()
+      },
     ]
   }
 }
