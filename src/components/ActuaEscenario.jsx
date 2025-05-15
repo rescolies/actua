@@ -8,20 +8,27 @@ const ActuaEscenario = () => {
   const [indiceEscena, setIndiceEscena] = useState(0)
   const [paso, setPaso] = useState(0)
   const [eleccion, setEleccion] = useState('')
+  const [elecciones, setElecciones] = useState({}) // <- Guarda todas las elecciones
 
   const escena = escenas[indiceEscena]
   const pasoActual = escena.pasos[paso]
   const totalPasos = escena.pasos.length
 
   const avanzar = (op = '') => {
-    if (pasoActual.tipo === 'eleccion' && !op) return
-    if (pasoActual.tipo === 'eleccion') setEleccion(op)
+    if (pasoActual.tipo === 'eleccion') {
+      if (!op) return
+      const nuevasElecciones = { ...elecciones, [indiceEscena]: op }
+      setElecciones(nuevasElecciones)
+      setEleccion(op)
+    }
+
     if (paso < totalPasos - 1) {
       setPaso(paso + 1)
     } else if (indiceEscena < escenas.length - 1) {
-      setIndiceEscena(indiceEscena + 1)
+      const nuevaEscena = indiceEscena + 1
+      setIndiceEscena(nuevaEscena)
       setPaso(0)
-      setEleccion('')
+      setEleccion(elecciones[nuevaEscena] || '')
     }
   }
 
@@ -30,9 +37,10 @@ const ActuaEscenario = () => {
       setPaso(paso - 1)
     } else if (indiceEscena > 0) {
       const nuevaEscena = indiceEscena - 1
+      const pasosPrevios = escenas[nuevaEscena].pasos
       setIndiceEscena(nuevaEscena)
-      setPaso(escenas[nuevaEscena].pasos.length - 1)
-      setEleccion('')
+      setPaso(pasosPrevios.length - 1)
+      setEleccion(elecciones[nuevaEscena] || '')
     }
   }
 
@@ -56,7 +64,11 @@ const ActuaEscenario = () => {
     if (pasoActual.tipo === 'situacion') {
       return (
         <Box textAlign="center">
-          <img src={`/${pasoActual.imagen}`} alt="Escena" style={{ maxWidth: '100%', maxHeight: 'calc(100vh - 200px)', objectFit: 'contain' }} />
+          <img
+            src={`/${pasoActual.imagen}`}
+            alt="Escena"
+            style={{ maxWidth: '100%', maxHeight: 'calc(100vh - 200px)', objectFit: 'contain' }}
+          />
           <Typography mt={2}>{pasoActual.descripcion}</Typography>
         </Box>
       )
@@ -85,9 +97,20 @@ const ActuaEscenario = () => {
       )
     } else if (pasoActual.tipo === 'resultado') {
       const resultado = pasoActual.resultados[eleccion]
+      if (!resultado) {
+        return (
+          <Box textAlign="center" mt={4}>
+            <Typography color="error">No hay resultado disponible. Vuelve a hacer una elección.</Typography>
+          </Box>
+        )
+      }
       return (
         <Box textAlign="center">
-          <img src={`/${resultado.imagen}`} alt={resultado.texto} style={{ maxWidth: '100%', maxHeight: 'calc(100vh - 200px)', objectFit: 'contain' }} />
+          <img
+            src={`/${resultado.imagen}`}
+            alt={resultado.texto}
+            style={{ maxWidth: '100%', maxHeight: 'calc(100vh - 200px)', objectFit: 'contain' }}
+          />
           <Typography mt={2}>{resultado.texto}</Typography>
         </Box>
       )
