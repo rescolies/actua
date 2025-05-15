@@ -1,3 +1,4 @@
+// src/components/ActuaEscenario.jsx
 import React, { useState } from 'react'
 import {
   Box,
@@ -5,7 +6,8 @@ import {
   Button,
   Grid,
   Drawer,
-  IconButton
+  IconButton,
+  Stack
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
@@ -36,7 +38,6 @@ const ActuaEscenario = () => {
   const totalPasos = escena.pasos.length
   const eleccion = elecciones[escena.id] || ''
 
-  // Navegar a una escena concreta
   const goToScene = newIdx => {
     setIndiceEscena(newIdx)
     reiniciarPaso()
@@ -67,7 +68,6 @@ const ActuaEscenario = () => {
     }
   }
 
-  // Renderizado específico de cada paso
   const renderContenido = () => {
     if (pasoActual.tipo === 'situacion') {
       return (
@@ -77,7 +77,7 @@ const ActuaEscenario = () => {
             alt="Escena"
             style={{
               maxWidth: '100%',
-              maxHeight: 'calc(100vh - 260px)',
+              height: 'auto',
               objectFit: 'contain'
             }}
           />
@@ -101,7 +101,7 @@ const ActuaEscenario = () => {
                   '&:hover': { backgroundColor: '#e0e0e0' }
                 }}
               >
-                <img src={`/${op.imagen}`} alt={op.texto} style={{ maxWidth: '100%' }} />
+                <img src={`/${op.imagen}`} alt={op.texto} style={{ maxWidth: '100%', height: 'auto' }} />
                 <Typography mt={1}>{op.texto}</Typography>
               </Box>
             </Grid>
@@ -109,6 +109,7 @@ const ActuaEscenario = () => {
         </Grid>
       )
     }
+    // resultado
     const resultado = pasoActual.resultados[eleccion]
     if (!resultado) {
       return (
@@ -124,7 +125,7 @@ const ActuaEscenario = () => {
           alt={resultado.texto}
           style={{
             maxWidth: '100%',
-            maxHeight: 'calc(100vh - 200px)',
+            height: 'auto',
             objectFit: 'contain'
           }}
         />
@@ -135,7 +136,7 @@ const ActuaEscenario = () => {
 
   return (
     <>
-      {/* DRAWER */}
+      {/* DRAWER MENU */}
       <Drawer open={menuOpen} onClose={() => setMenuOpen(false)}>
         <DrawerMenu
           items={escenas}
@@ -155,36 +156,28 @@ const ActuaEscenario = () => {
           pb: 8
         }}
       >
-        {/* Contenedor para Menú + Idioma */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 16,
-            left: 8,               // <-- más a la izquierda
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            zIndex: 11
-          }}
+        {/* Menú + Idioma encima del título, centrado */}
+        <Stack
+          direction="row"
+          spacing={1}
+          justifyContent="center"
+          sx={{ mb: 2 }}
         >
-          {/* Botón MENÚ */}
           <IconButton size="large" onClick={() => setMenuOpen(true)}>
             <MenuIcon />
             <Typography sx={{ ml: 0.5 }}>{data.ui.menu}</Typography>
           </IconButton>
-
-          {/* Botón Idioma */}
           <Button size="small" onClick={() => cambiarIdioma(idioma === 'es' ? 'ca' : 'es')}>
             {idioma === 'es' ? 'CAT' : 'ES'}
           </Button>
-        </Box>
+        </Stack>
 
-        {/* Resto de tu layout: título, pictos, subtítulo... */}
+        {/* Título */}
         <Typography variant="h4" align="center" gutterBottom>
           {escena.titulo}
         </Typography>
 
-        {/* Pictogramas (solo paso = situacion) */}
+        {/* Pictogramas (solo en paso=“situacion”) */}
         {pasoActual.tipo === 'situacion' && escena.pictos && (
           <Box display="flex" justifyContent="center" gap={2} mb={1}>
             {escena.pictos.map((pic, i) => (
@@ -219,40 +212,52 @@ const ActuaEscenario = () => {
           {data.ui.pasoTexto(paso + 1, totalPasos)}
         </Typography>
 
-        {/* Botones laterales */}
+        {/* Botón ATRÁS */}
         {!(indiceEscena === 0 && paso === 0) && (
           <Button
             onClick={retroceder}
-            startIcon={<ArrowBackIosNewIcon />}
             variant="outlined"
             sx={{
               position: 'fixed',
               top: '50%',
-              left: 10,
+              left: 8,
               transform: 'translateY(-50%)',
               zIndex: 10,
-              display: { xs: 'none', sm: 'flex' }
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 64,
+              height: 64
             }}
           >
-            {data.ui.atras}
+            <ArrowBackIosNewIcon fontSize="small" />
+            <Typography variant="caption">{data.ui.atras}</Typography>
           </Button>
         )}
+
+        {/* Botón SIGUIENTE */}
         {(pasoActual.tipo === 'situacion' ||
           (pasoActual.tipo === 'resultado' && indiceEscena < escenas.length - 1)) && (
           <Button
             onClick={() => avanzar()}
-            endIcon={<ArrowForwardIosIcon />}
             variant="contained"
             sx={{
               position: 'fixed',
               top: '50%',
-              right: 10,
+              right: 8,
               transform: 'translateY(-50%)',
               zIndex: 10,
-              display: { xs: 'none', sm: 'flex' }
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: 64,
+              height: 64
             }}
           >
-            {data.ui.siguiente}
+            <ArrowForwardIosIcon fontSize="small" />
+            <Typography variant="caption">{data.ui.siguiente}</Typography>
           </Button>
         )}
       </Box>
