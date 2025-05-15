@@ -31,7 +31,9 @@ const ActuaEscenario = () => {
     setIndiceEscena,
     setPaso,
     guardarEleccion,
-    cambiarIdioma
+    setElecciones,
+    cambiarIdioma,
+    setStage
   } = useActua()
 
   const [menuOpen, setMenuOpen] = useState(false)
@@ -52,7 +54,7 @@ const ActuaEscenario = () => {
   const avanzar = id => {
     if (pasoActual.tipo === 'eleccion') {
       if (!id) return
-      guardarEleccion(escena.id, id)
+      setElecciones(prev => ({ ...prev, [escena.id]: id }))
     }
     if (paso < totalPasos - 1) {
       setPaso(paso + 1)
@@ -156,6 +158,13 @@ const ActuaEscenario = () => {
           </IconButton>
           <Button variant="outlined" size="small" onClick={() => cambiarIdioma(idioma === 'es' ? 'ca' : 'es')}>
             {idioma === 'es' ? 'CAT' : 'ES'}
+          </Button>
+          <Button
+            variant="text"
+            size="small"
+            onClick={() => setStage('menu')}
+            sx={{ ml: 2 }}>
+            {textos[idioma].ui.menu}
           </Button>
         </Stack>
 

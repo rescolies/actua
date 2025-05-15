@@ -1,9 +1,23 @@
-// src/textos.js
-
 const textos = {
   es: {
     ui: {
+      // Portada
+      portadaTitle: 'ACTUA',
+      portadaButton: 'SIGUIENTE',
+
+      // Ingreso alumno
+      ingresoPrompt: 'Introduce el nombre del alumno',
+      ingresoLabel: 'Nombre',
+      ingresoError: 'Nombre no válido',
+      ingresoButton: 'SIGUIENTE',
+
+      // Menú principal
+      greeting: 'Hola,',
+      logout: 'LOGOUT',
+
+      // Menú lateral en escenario
       menu: 'MENÚ',
+
       atras: 'ATRÁS',
       siguiente: 'SIGUIENTE',
       pasoTexto: (act, tot) => `Paso ${act} de ${tot}`,
@@ -98,14 +112,26 @@ const textos = {
       // ... aquí podrás añadir más escenas, cada una con su campo `categoria`
     ]
   },
-
   ca: {
     ui: {
+      portadaTitle: 'ACTUA',
+      portadaButton: 'SEGÜENT',
+
+      ingresoPrompt: 'Introdueix el nom de l’alumne',
+      ingresoLabel: 'Nom',
+      ingresoError: 'Nom no vàlid',
+      ingresoButton: 'SEGÜENT',
+
+      greeting: 'Hola,',
+      logout: 'SORTIR',
+
       menu: 'MENÚ',
+
       atras: 'ENRERE',
       siguiente: 'SEGÜENT',
       pasoTexto: (act, tot) => `Pas ${act} de ${tot}`,
       errorSinEleccion: 'No hi ha resultat disponible. Torna a fer una elecció.',
+
       categories: {
         sociales: 'Situacions socials',
         emociones: 'Emocions',

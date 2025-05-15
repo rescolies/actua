@@ -2,6 +2,11 @@ import React from 'react'
 import { ThemeProvider, createTheme } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import Container from '@mui/material/Container'
+import { useActua } from './context/ActuaContext'
+
+import Portada from './components/Portada'
+import IngresoAlumno from './components/IngresoAlumno'
+import MainMenu from './components/MainMenu'
 import ActuaEscenario from './components/ActuaEscenario'
 
 const theme = createTheme({
@@ -18,15 +23,24 @@ const theme = createTheme({
   }
 })
 
-function App() {
+function AppContent() {
+  const { stage } = useActua()
+  switch (stage) {
+    case 'portada':    return <Portada />
+    case 'ingreso':    return <IngresoAlumno />
+    case 'menu':       return <MainMenu />
+    case 'escenario':  return <ActuaEscenario />
+    default:           return null
+  }
+}
+
+export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Container maxWidth="md">
-        <ActuaEscenario />
+        <AppContent />
       </Container>
     </ThemeProvider>
   )
 }
-
-export default App
