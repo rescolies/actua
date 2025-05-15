@@ -1,53 +1,61 @@
-import React, { useState, useEffect } from 'react'
-import { Box, Typography, Button, Grid } from '@mui/material'
+import React, { useState } from 'react'
+import {
+  Box,
+  Typography,
+  Button,
+  Grid,
+  Drawer,
+  IconButton
+} from '@mui/material'
+import MenuIcon from '@mui/icons-material/Menu'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import textos from '../textos'
+import { useActua } from '../context/ActuaContext'
+import DrawerMenu from './DrawerMenu'
 
 const ActuaEscenario = () => {
-  // --- Idioma ---
-  const [idioma, setIdioma] = useState(() => localStorage.getItem('idioma') || 'es')
-  useEffect(() => localStorage.setItem('idioma', idioma), [idioma])
+  const {
+    indiceEscena,
+    paso,
+    elecciones,
+    idioma,
+    reiniciarPaso,
+    setIndiceEscena,
+    setPaso,
+    guardarEleccion,
+    cambiarIdioma
+  } = useActua()
+
+  const [menuOpen, setMenuOpen] = useState(false)
 
   const data = textos[idioma]
   const escenas = data.escenas
-
-  // --- Estado ---
-  const [indiceEscena, setIndiceEscena] = useState(0)
-  const [paso, setPaso] = useState(0)
-  const [elecciones, setElecciones] = useState(() => {
-    const saved = localStorage.getItem('elecciones')
-    return saved ? JSON.parse(saved) : {}
-  })
-  useEffect(() => localStorage.setItem('elecciones', JSON.stringify(elecciones)), [elecciones])
-
-  // --- Elección actual ---
-  const [eleccion, setEleccion] = useState('')
-  useEffect(() => {
-    setEleccion(elecciones[indiceEscena] || '')
-  }, [indiceEscena, elecciones])
-
   const escena = escenas[indiceEscena]
   const pasoActual = escena.pasos[paso]
   const totalPasos = escena.pasos.length
+  const eleccion = elecciones[escena.id] || ''
 
-  // --- Avanzar ---
-  const avanzar = (id = '') => {
+  // Navegar a una escena concreta
+  const goToScene = newIdx => {
+    setIndiceEscena(newIdx)
+    reiniciarPaso()
+    setMenuOpen(false)
+  }
+
+  const avanzar = id => {
     if (pasoActual.tipo === 'eleccion') {
       if (!id) return
-      const nuev = { ...elecciones, [indiceEscena]: id }
-      setElecciones(nuev)
-      setEleccion(id)
+      guardarEleccion(escena.id, id)
     }
     if (paso < totalPasos - 1) {
       setPaso(paso + 1)
     } else if (indiceEscena < escenas.length - 1) {
       setIndiceEscena(indiceEscena + 1)
-      setPaso(0)
+      reiniciarPaso()
     }
   }
 
-  // --- Retroceder ---
   const retroceder = () => {
     if (paso > 0) {
       setPaso(paso - 1)
@@ -59,24 +67,7 @@ const ActuaEscenario = () => {
     }
   }
 
-  // --- Progreso visual ---
-  const renderProgreso = () => (
-    <Box display="flex" justifyContent="center" gap={1} mt={4}>
-      {Array.from({ length: totalPasos }).map((_, i) => (
-        <Box
-          key={i}
-          sx={{
-            width: 12,
-            height: 12,
-            borderRadius: '50%',
-            backgroundColor: i <= paso ? '#333' : '#ccc'
-          }}
-        />
-      ))}
-    </Box>
-  )
-
-  // --- Contenido según paso ---
+  // Renderizado específico de cada paso
   const renderContenido = () => {
     if (pasoActual.tipo === 'situacion') {
       return (
@@ -97,7 +88,7 @@ const ActuaEscenario = () => {
     if (pasoActual.tipo === 'eleccion') {
       return (
         <Grid container spacing={2}>
-          {pasoActual.opciones.map((op) => (
+          {pasoActual.opciones.map(op => (
             <Grid item xs={12} sm={6} key={op.id}>
               <Box
                 onClick={() => avanzar(op.id)}
@@ -118,7 +109,6 @@ const ActuaEscenario = () => {
         </Grid>
       )
     }
-    // tipo resultado
     const resultado = pasoActual.resultados[eleccion]
     if (!resultado) {
       return (
@@ -144,82 +134,115 @@ const ActuaEscenario = () => {
   }
 
   return (
-    <Box sx={{ mt: 4, mx: { xs: '60px', sm: '80px' }, position: 'relative', pb: 8 }}>
-      {/* Selector idioma */}
-      <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
-        <Button size="small" onClick={() => setIdioma(idioma === 'es' ? 'ca' : 'es')}>
-          {idioma === 'es' ? 'CAT' : 'ES'}
-        </Button>
-      </Box>
+    <>
+      {/* === DRAWER MENU === */}
+      <Drawer open={menuOpen} onClose={() => setMenuOpen(false)}>
+        <DrawerMenu
+          items={escenas}
+          currentIndex={indiceEscena}
+          completed={elecciones}
+          categories={data.ui.categories}
+          onSelect={goToScene}
+        />
+      </Drawer>
 
-      {/* Título */}
-      <Typography variant="h4" align="center" gutterBottom>
-        {escena.titulo}
-      </Typography>
+      {/* === ESCENARIO PRINCIPAL === */}
+      <Box sx={{ mt: 4, mx: { xs: '60px', sm: '80px' }, position: 'relative', pb: 8 }}>
+        {/* Botón MENÚ */}
+        <IconButton
+          onClick={() => setMenuOpen(true)}
+          size="large"
+          sx={{ position: 'absolute', top: 16, left: 16, zIndex: 11 }}
+        >
+          <MenuIcon />
+          <Typography sx={{ ml: 1 }}>{data.ui.menu}</Typography>
+        </IconButton>
 
-      {/* ← AHORA los pictogramas justo aquí, **entre** título y subtítulo */}
-      {pasoActual.tipo === 'situacion' && escena.pictos && (
-        <Box display="flex" justifyContent="center" gap={2} mb={1}>
-          {escena.pictos.map((pic, i) => (
-            <img
+        {/* Selector idioma */}
+        <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+          <Button size="small" onClick={() => cambiarIdioma(idioma === 'es' ? 'ca' : 'es')}>
+            {idioma === 'es' ? 'CAT' : 'ES'}
+          </Button>
+        </Box>
+
+        {/* Título */}
+        <Typography variant="h4" align="center" gutterBottom>
+          {escena.titulo}
+        </Typography>
+
+        {/* Pictogramas (solo paso = situacion) */}
+        {pasoActual.tipo === 'situacion' && escena.pictos && (
+          <Box display="flex" justifyContent="center" gap={2} mb={1}>
+            {escena.pictos.map((pic, i) => (
+              <img key={i} src={`/${pic}`} alt={`Picto ${i + 1}`} style={{ width: 40, height: 40 }} />
+            ))}
+          </Box>
+        )}
+
+        {/* Subtítulo */}
+        <Typography variant="subtitle1" align="center" sx={{ mb: 2 }}>
+          {pasoActual.titulo}
+        </Typography>
+
+        {/* Contenido */}
+        {renderContenido()}
+
+        {/* Progreso */}
+        <Box display="flex" justifyContent="center" gap={1} mt={4}>
+          {Array.from({ length: totalPasos }).map((_, i) => (
+            <Box
               key={i}
-              src={`/${pic}`}
-              alt={`Picto ${i + 1}`}
-              style={{ width: 40, height: 40 }}
+              sx={{
+                width: 12,
+                height: 12,
+                borderRadius: '50%',
+                backgroundColor: i <= paso ? '#333' : '#ccc'
+              }}
             />
           ))}
         </Box>
-      )}
+        <Typography align="center" variant="body2" sx={{ mt: 2 }}>
+          {data.ui.pasoTexto(paso + 1, totalPasos)}
+        </Typography>
 
-      {/* Subtítulo */}
-      <Typography variant="subtitle1" align="center" sx={{ mb: 2 }}>
-        {pasoActual.titulo}
-      </Typography>
-
-      {/* Contenido y resto */}
-      {renderContenido()}
-      {renderProgreso()}
-      <Typography align="center" variant="body2" sx={{ mt: 2 }}>
-        {data.ui.pasoTexto(paso + 1, totalPasos)}
-      </Typography>
-
-      {/* Botones ATRÁS/SIGUIENTE */}
-      {!(indiceEscena === 0 && paso === 0) && (
-        <Button
-          onClick={retroceder}
-          startIcon={<ArrowBackIosNewIcon />}
-          variant="outlined"
-          sx={{
-            position: 'fixed',
-            top: '50%',
-            left: 10,
-            transform: 'translateY(-50%)',
-            zIndex: 10,
-            display: { xs: 'none', sm: 'flex' }
-          }}
-        >
-          {data.ui.atras}
-        </Button>
-      )}
-      {(pasoActual.tipo === 'situacion' ||
-        (pasoActual.tipo === 'resultado' && indiceEscena < escenas.length - 1)) && (
-        <Button
-          onClick={() => avanzar()}
-          endIcon={<ArrowForwardIosIcon />}
-          variant="contained"
-          sx={{
-            position: 'fixed',
-            top: '50%',
-            right: 10,
-            transform: 'translateY(-50%)',
-            zIndex: 10,
-            display: { xs: 'none', sm: 'flex' }
-          }}
-        >
-          {data.ui.siguiente}
-        </Button>
-      )}
-    </Box>
+        {/* Botones laterales */}
+        {!(indiceEscena === 0 && paso === 0) && (
+          <Button
+            onClick={retroceder}
+            startIcon={<ArrowBackIosNewIcon />}
+            variant="outlined"
+            sx={{
+              position: 'fixed',
+              top: '50%',
+              left: 10,
+              transform: 'translateY(-50%)',
+              zIndex: 10,
+              display: { xs: 'none', sm: 'flex' }
+            }}
+          >
+            {data.ui.atras}
+          </Button>
+        )}
+        {(pasoActual.tipo === 'situacion' ||
+          (pasoActual.tipo === 'resultado' && indiceEscena < escenas.length - 1)) && (
+          <Button
+            onClick={() => avanzar()}
+            endIcon={<ArrowForwardIosIcon />}
+            variant="contained"
+            sx={{
+              position: 'fixed',
+              top: '50%',
+              right: 10,
+              transform: 'translateY(-50%)',
+              zIndex: 10,
+              display: { xs: 'none', sm: 'flex' }
+            }}
+          >
+            {data.ui.siguiente}
+          </Button>
+        )}
+      </Box>
+    </>
   )
 }
 
