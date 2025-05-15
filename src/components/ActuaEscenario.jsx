@@ -135,7 +135,7 @@ const ActuaEscenario = () => {
 
   return (
     <>
-      {/* === DRAWER MENU === */}
+      {/* DRAWER */}
       <Drawer open={menuOpen} onClose={() => setMenuOpen(false)}>
         <DrawerMenu
           items={escenas}
@@ -146,26 +146,40 @@ const ActuaEscenario = () => {
         />
       </Drawer>
 
-      {/* === ESCENARIO PRINCIPAL === */}
-      <Box sx={{ mt: 4, mx: { xs: '60px', sm: '80px' }, position: 'relative', pb: 8 }}>
-        {/* Botón MENÚ */}
-        <IconButton
-          onClick={() => setMenuOpen(true)}
-          size="large"
-          sx={{ position: 'absolute', top: 16, left: 16, zIndex: 11 }}
+      {/* ESCENARIO */}
+      <Box
+        sx={{
+          mt: 4,
+          mx: { xs: '60px', sm: '80px' },
+          position: 'relative',
+          pb: 8
+        }}
+      >
+        {/* Contenedor para Menú + Idioma */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 16,
+            left: 8,               // <-- más a la izquierda
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            zIndex: 11
+          }}
         >
-          <MenuIcon />
-          <Typography sx={{ ml: 1 }}>{data.ui.menu}</Typography>
-        </IconButton>
+          {/* Botón MENÚ */}
+          <IconButton size="large" onClick={() => setMenuOpen(true)}>
+            <MenuIcon />
+            <Typography sx={{ ml: 0.5 }}>{data.ui.menu}</Typography>
+          </IconButton>
 
-        {/* Selector idioma */}
-        <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
+          {/* Botón Idioma */}
           <Button size="small" onClick={() => cambiarIdioma(idioma === 'es' ? 'ca' : 'es')}>
             {idioma === 'es' ? 'CAT' : 'ES'}
           </Button>
         </Box>
 
-        {/* Título */}
+        {/* Resto de tu layout: título, pictos, subtítulo... */}
         <Typography variant="h4" align="center" gutterBottom>
           {escena.titulo}
         </Typography>
