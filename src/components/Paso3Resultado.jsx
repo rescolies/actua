@@ -15,7 +15,7 @@ function Paso3Resultado({ eleccion }) {
       <>
         <h2 className="subtitulo">CONSECUENCIA PROBABLE</h2>
         <div className="opcion">
-          <img src={imagenes[eleccion]} alt={textos[eleccion]} className="imagen-opcion" />
+          <img src={`${import.meta.env.BASE_URL}${imagenes[eleccion]}`} alt={textos[eleccion]} className="imagen-opcion" />
           <p className="descripcion">{textos[eleccion]}</p>
         </div>
       </>

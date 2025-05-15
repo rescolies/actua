@@ -20,7 +20,7 @@ function Paso2Elecciones({ avanzar }) {
         <div className="elecciones">
           {elecciones.map((opcion, index) => (
             <div key={index} className="opcion" onClick={() => avanzar(opcion.descripcion)}>
-              <img src={opcion.imagen} alt={opcion.descripcion} className="imagen-opcion" />
+              <img src={`${import.meta.env.BASE_URL}${opcion.imagen}`} alt={opcion.descripcion} className="imagen-opcion" />
               <p className="descripcion">{opcion.descripcion}</p>
             </div>
           ))}

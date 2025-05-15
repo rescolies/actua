@@ -1,0 +1,50 @@
+
+.boton-lateral {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 0.75rem 1rem;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  text-transform: uppercase;
+  font-weight: bold;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.boton-lateral.izquierda {
+  left: 0;
+}
+
+.boton-lateral.derecha {
+  right: 0;
+}
+
+.boton-lateral svg {
+  width: 24px;
+  height: 24px;
+  fill: #222;
+}
+
+@media (max-width: 768px) {
+  .boton-lateral {
+    font-size: 0.85rem;
+    padding: 0.5rem;
+  }
+
+  .boton-lateral svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .boton-lateral.izquierda {
+    left: 0;
+  }
+
+  .boton-lateral.derecha {
+    right: 0;
+  }
+}
