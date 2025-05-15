@@ -1,9 +1,7 @@
-
 .boton-lateral {
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
-  padding: 0.5rem;
   background-color: #eee;
   border: 1px solid #ccc;
   text-transform: uppercase;
@@ -13,9 +11,11 @@
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
-  max-width: 60px;
-  word-break: break-word;
-  font-size: 0.75rem;
+  width: 100px;
+  height: 80px;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.8rem;
 }
 
 .boton-lateral.izquierda {
@@ -32,51 +32,63 @@
   fill: #222;
 }
 
+.barra-progreso {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f3f3f3;
+  text-align: center;
+  padding: 0.5rem;
+  z-index: 99;
+}
+
+.barra-pasos {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.punto {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ccc;
+}
+
+.punto.activo {
+  background-color: #333;
+}
+
+.texto-paso {
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #222;
+}
+
 @media (max-width: 768px) {
   .boton-lateral {
-    font-size: 0.6rem;
-    padding: 0.3rem;
-    max-width: 50px;
-  }
-
-  .boton-lateral svg {
-    width: 18px;
-    height: 18px;
+    width: 90px;
+    height: 70px;
+    font-size: 0.7rem;
   }
 
   .barra-progreso {
-    height: 1.5rem !important;
-    font-size: 0.9rem !important;
+    padding: 0.25rem;
   }
 
-  .titulo-fijo {
-    font-size: 1rem !important;
-    padding: 0.5rem;
+  .texto-paso {
+    font-size: 0.75rem;
   }
 }
 
 @media (max-width: 768px) and (orientation: landscape) {
-  .elecciones {
-    flex-direction: row !important;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-
-  .opcion {
-    flex: 1 1 30%;
-    max-width: 30%;
-  }
-
-  .imagen-opcion {
-    max-width: 100%;
+  .barra-progreso {
     height: auto;
   }
 
-  .barra-progreso {
-    height: 1rem !important;
-  }
-
-  .titulo-fijo {
-    font-size: 0.85rem !important;
+  .texto-paso {
+    font-size: 0.7rem;
   }
 }
