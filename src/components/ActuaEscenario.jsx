@@ -81,7 +81,7 @@ const ActuaEscenario = () => {
               objectFit: 'contain'
             }}
           />
-          <Typography mt={2}>{pasoActual.descripcion}</Typography>
+          <Typography mt={1}>{pasoActual.descripcion}</Typography>
         </Box>
       )
     }
@@ -150,24 +150,27 @@ const ActuaEscenario = () => {
       {/* ESCENARIO */}
       <Box
         sx={{
-          mt: 4,
-          mx: { xs: '60px', sm: '80px' },
+          mt: 0,
+          mx: { xs: '60px', sm: '150px' },
           position: 'relative',
-          pb: 8
+          pb: 1
         }}
       >
-        {/* Menú + Idioma encima del título, centrado */}
+        {/* Menú + Idioma encima del título, alineado a la izquierda */}
         <Stack
           direction="row"
-          spacing={1}
-          justifyContent="center"
-          sx={{ mb: 2 }}
+          spacing={0}
+          justifyContent="flex-start"
+          sx={{ mb: 0 }}
         >
           <IconButton size="large" onClick={() => setMenuOpen(true)}>
             <MenuIcon />
             <Typography sx={{ ml: 0.5 }}>{data.ui.menu}</Typography>
           </IconButton>
-          <Button size="small" onClick={() => cambiarIdioma(idioma === 'es' ? 'ca' : 'es')}>
+          <Button
+            size="small"
+            onClick={() => cambiarIdioma(idioma === 'es' ? 'ca' : 'es')}
+          >
             {idioma === 'es' ? 'CAT' : 'ES'}
           </Button>
         </Stack>
@@ -179,7 +182,7 @@ const ActuaEscenario = () => {
 
         {/* Pictogramas (solo en paso=“situacion”) */}
         {pasoActual.tipo === 'situacion' && escena.pictos && (
-          <Box display="flex" justifyContent="center" gap={2} mb={1}>
+          <Box display="flex" justifyContent="center" gap={4} mb={5}>
             {escena.pictos.map((pic, i) => (
               <img key={i} src={`/${pic}`} alt={`Picto ${i + 1}`} style={{ width: 40, height: 40 }} />
             ))}
@@ -187,7 +190,7 @@ const ActuaEscenario = () => {
         )}
 
         {/* Subtítulo */}
-        <Typography variant="subtitle1" align="center" sx={{ mb: 2 }}>
+        <Typography variant="subtitle1" align="center" sx={{ mb: 1 }}>
           {pasoActual.titulo}
         </Typography>
 
@@ -208,7 +211,7 @@ const ActuaEscenario = () => {
             />
           ))}
         </Box>
-        <Typography align="center" variant="body2" sx={{ mt: 2 }}>
+        <Typography align="center" variant="body2" sx={{ mt: 1 }}>
           {data.ui.pasoTexto(paso + 1, totalPasos)}
         </Typography>
 
@@ -220,19 +223,21 @@ const ActuaEscenario = () => {
             sx={{
               position: 'fixed',
               top: '50%',
-              left: 8,
+              left: 4,
               transform: 'translateY(-50%)',
               zIndex: 10,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 64,
-              height: 64
+              width: 70,
+              height: 70,
+              backgroundColor: 'transparent',
+              color: 'inherit'
             }}
           >
             <ArrowBackIosNewIcon fontSize="small" />
-            <Typography variant="caption">{data.ui.atras}</Typography>
+            <Typography variant="caption" sx={{mt : 1 } }>{data.ui.atras}</Typography>
           </Button>
         )}
 
@@ -241,23 +246,25 @@ const ActuaEscenario = () => {
           (pasoActual.tipo === 'resultado' && indiceEscena < escenas.length - 1)) && (
           <Button
             onClick={() => avanzar()}
-            variant="contained"
+            variant="outlined"
             sx={{
               position: 'fixed',
               top: '50%',
-              right: 8,
+              right: 4,
               transform: 'translateY(-50%)',
               zIndex: 10,
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
               justifyContent: 'center',
-              width: 64,
-              height: 64
+              width: 70,
+              height: 70,
+              backgroundColor: 'transparent',
+              color: 'inherit',
             }}
           >
             <ArrowForwardIosIcon fontSize="small" />
-            <Typography variant="caption">{data.ui.siguiente}</Typography>
+            <Typography variant="caption" sx={{mt : 1 } }>{data.ui.siguiente}</Typography>
           </Button>
         )}
       </Box>
