@@ -30,14 +30,12 @@ const ActuaEscenario = () => {
     reiniciarPaso,
     setIndiceEscena,
     setPaso,
-    guardarEleccion,
     setElecciones,
     cambiarIdioma,
     setStage
   } = useActua()
 
   const [menuOpen, setMenuOpen] = useState(false)
-
   const data = textos[idioma]
   const escenas = data.escenas
   const escena = escenas[indiceEscena]
@@ -45,35 +43,64 @@ const ActuaEscenario = () => {
   const totalPasos = escena.pasos.length
   const eleccion = elecciones[escena.id] || ''
 
+  // Navegar (abrir escena)
   const goToScene = idx => {
     setIndiceEscena(idx)
     reiniciarPaso()
     setMenuOpen(false)
   }
 
+  // Avanzar lógica
   const avanzar = id => {
+    const isLastScene = indiceEscena === escenas.length - 1
+    const isLastStep = paso === totalPasos - 1
+
+    // Si es elección, guarda y quizá terminas
     if (pasoActual.tipo === 'eleccion') {
       if (!id) return
       setElecciones(prev => ({ ...prev, [escena.id]: id }))
+      // Si es la última escena y último paso, al menú
+      if (isLastScene && isLastStep) {
+        setStage('menu')
+        return
+      }
     }
+
+    // Si no es el último paso, avanzamos
     if (paso < totalPasos - 1) {
       setPaso(paso + 1)
-    } else if (indiceEscena < escenas.length - 1) {
+      return
+    }
+
+    // paso === último paso
+    if (!isLastScene) {
+      // no última escena: siguiente escena
       setIndiceEscena(indiceEscena + 1)
       reiniciarPaso()
+    } else {
+      // última escena & paso resultado: redirige al menú
+      setStage('menu')
     }
   }
 
-  const retroceder = () => {
+  // Retroceder lógica
+  const handleBack = () => {
+    // primer escenario y paso: vuelve al menú
+    if (indiceEscena === 0 && paso === 0) {
+      setStage('menu')
+      return
+    }
+    // sino, retrocede paso o escena
     if (paso > 0) {
       setPaso(paso - 1)
-    } else if (indiceEscena > 0) {
+    } else {
       const prev = indiceEscena - 1
       setIndiceEscena(prev)
       setPaso(escenas[prev].pasos.length - 1)
     }
   }
 
+  // Render del contenido (situación / elección / resultado)
   const renderContenido = () => {
     if (pasoActual.tipo === 'situacion') {
       return (
@@ -87,6 +114,7 @@ const ActuaEscenario = () => {
         </Box>
       )
     }
+
     if (pasoActual.tipo === 'eleccion') {
       return (
         <Grid container spacing={2} mb={2}>
@@ -117,6 +145,8 @@ const ActuaEscenario = () => {
         </Grid>
       )
     }
+
+    // resultado
     const resultado = pasoActual.resultados[eleccion]
     if (!resultado) {
       return (
@@ -139,6 +169,7 @@ const ActuaEscenario = () => {
 
   return (
     <>
+      {/* Menú lateral */}
       <Drawer open={menuOpen} onClose={() => setMenuOpen(false)}>
         <DrawerMenu
           items={escenas}
@@ -211,12 +242,11 @@ const ActuaEscenario = () => {
         {/* Navegación lateral en desktop / footer en móvil */}
         {isSmUp ? (
           <>
-            {!(indiceEscena === 0 && paso === 0) && (
-              <Button
-                onClick={retroceder}
-                sx={{
+            <Button
+              onClick={handleBack}
+              sx={{
                   position: 'fixed',
-                  top: '50%',
+                top: '50%',
                   left: theme.spacing(1),
                   transform: 'translateY(-50%)',
                   minWidth: 48,
@@ -231,20 +261,19 @@ const ActuaEscenario = () => {
                   height: 70,
                   backgroundColor: 'transparent',
                   color: 'inherit'
-                }}
-                variant="outlined"
-              >
-                <ArrowBackIosNewIcon />
+              }}
+              variant="outlined"
+            >
+              <ArrowBackIosNewIcon />
                 <Typography variant="caption" sx={{mt : 1 } }>{data.ui.atras}</Typography>
-              </Button>
-            )}
+            </Button>
             {(pasoActual.tipo === 'situacion' ||
               (pasoActual.tipo === 'resultado' && indiceEscena < escenas.length - 1)) && (
-              <Button
-                onClick={() => avanzar()}
-                sx={{
+            <Button
+              onClick={() => avanzar()}
+              sx={{
                   position: 'fixed',
-                  top: '50%',
+                top: '50%',
                   right: theme.spacing(1),
                   transform: 'translateY(-50%)',
                   minWidth: 48,
@@ -259,23 +288,24 @@ const ActuaEscenario = () => {
                   height: 70,
                   backgroundColor: 'transparent',
                   color: 'inherit',
-                }}
+              }}
                 variant="outlined"
-              >
-                <ArrowForwardIosIcon />
+            >
+              <ArrowForwardIosIcon />
                 <Typography variant="caption" sx={{mt : 1 } }>{data.ui.siguiente}</Typography>
-              </Button>
+            </Button>
             )}
           </>
         ) : (
           <Box display="flex" justifyContent="space-between" mt={4}>
-            <Button onClick={retroceder} disabled={indiceEscena === 0 && paso === 0}>
-            <ArrowBackIosNewIcon />{data.ui.atras}
+            <Button onClick={handleBack}>
+              <ArrowBackIosNewIcon />
+              {data.ui.atras}
             </Button>
             <Button
               onClick={() => avanzar()}
               disabled={
-                pasoActual.tipo === 'eleccion' && !eleccion
+              pasoActual.tipo === 'eleccion' && !eleccion
               }
             >
               {data.ui.siguiente}
