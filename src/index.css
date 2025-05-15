@@ -1,5 +1,6 @@
 body {
-  font-family: sans-serif;
-  text-align: center;
-  margin: 2rem;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f6f5f1;
+  color: #333;
 }

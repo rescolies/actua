@@ -23,18 +23,9 @@ const escenas = [
           tipo: "resultado",
           titulo: "CONSECUENCIA PROBABLE",
           resultados: {
-            "NO HACE NADA": {
-              texto: "LOS OTROS NIÑOS NO REACCIONAN",
-              imagen: base + "resultado1.png"
-            },
-            "SE ENFADA": {
-              texto: "LOS OTROS NIÑOS SE ALEJAN",
-              imagen: base + "resultado2.png"
-            },
-            "HACE UN GESTO": {
-              texto: "LOS NIÑOS COMPARTEN LAS PATATAS",
-              imagen: base + "resultado3.png"
-            }
+            "NO HACE NADA": { texto: "LOS OTROS NIÑOS NO REACCIONAN", imagen: base + "resultado1.png" },
+            "SE ENFADA": { texto: "LOS OTROS NIÑOS SE ALEJAN", imagen: base + "resultado2.png" },
+            "HACE UN GESTO": { texto: "LOS NIÑOS COMPARTEN LAS PATATAS", imagen: base + "resultado3.png" }
           }
         }
       ];
@@ -65,27 +56,14 @@ const escenas = [
           tipo: "resultado",
           titulo: "CONSECUENCIA PROBABLE",
           resultados: {
-            "LLORA": {
-              texto: "UN ADULTO LO CONSUELA",
-              imagen: base + "resultado1.png"
-            },
-            "PIDE AYUDA": {
-              texto: "REPARAN EL JUGUETE JUNTOS",
-              imagen: base + "resultado2.png"
-            },
-            "IGNORA EL JUGUETE": {
-              texto: "SE SIENTE TRISTE PERO CALMADO",
-              imagen: base + "resultado3.png"
-            },
-            "SE ENFADA Y LO TIRA": {
-              texto: "ROMPE OTROS OBJETOS Y LO REGAÑAN",
-              imagen: base + "resultado4.png"
-            }
+            "LLORA": { texto: "UN ADULTO LO CONSUELA", imagen: base + "resultado1.png" },
+            "PIDE AYUDA": { texto: "REPARAN EL JUGUETE JUNTOS", imagen: base + "resultado2.png" },
+            "IGNORA EL JUGUETE": { texto: "SE SIENTE TRISTE PERO CALMADO", imagen: base + "resultado3.png" },
+            "SE ENFADA Y LO TIRA": { texto: "ROMPE OTROS OBJETOS Y LO REGAÑAN", imagen: base + "resultado4.png" }
           }
         }
       ];
     })()
   }
-];
-
+]
 export default escenas;

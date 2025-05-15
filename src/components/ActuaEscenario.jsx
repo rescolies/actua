@@ -3,10 +3,8 @@ import { Box, Typography, Button, Grid } from '@mui/material'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import escenas from '../escenas'
-import textos from '../textos'
 
 const ActuaEscenario = () => {
-  const idioma = 'es'
   const [indiceEscena, setIndiceEscena] = useState(0)
   const [paso, setPaso] = useState(0)
   const [eleccion, setEleccion] = useState('')
@@ -39,11 +37,7 @@ const ActuaEscenario = () => {
     if (pasoActual.tipo === 'situacion') {
       return (
         <Box textAlign="center">
-          <img
-            src={`/${pasoActual.imagen}`}
-            alt="Escena"
-            style={{ maxWidth: '100%', height: 'auto' }}
-          />
+          <img src={`/${pasoActual.imagen}`} alt="Escena" style={{ maxWidth: '100%' }} />
           <Typography mt={2}>{pasoActual.descripcion}</Typography>
         </Box>
       )
@@ -63,11 +57,7 @@ const ActuaEscenario = () => {
                   '&:hover': { backgroundColor: '#e0e0e0' }
                 }}
               >
-                <img
-                  src={`/${op.imagen}`}
-                  alt={op.texto}
-                  style={{ maxWidth: '100%', height: 'auto' }}
-                />
+                <img src={`/${op.imagen}`} alt={op.texto} style={{ maxWidth: '100%' }} />
                 <Typography mt={1}>{op.texto}</Typography>
               </Box>
             </Grid>
@@ -78,11 +68,7 @@ const ActuaEscenario = () => {
       const resultado = pasoActual.resultados[eleccion]
       return (
         <Box textAlign="center">
-          <img
-            src={`/${resultado.imagen}`}
-            alt={resultado.texto}
-            style={{ maxWidth: '100%', height: 'auto' }}
-          />
+          <img src={`/${resultado.imagen}`} alt={resultado.texto} style={{ maxWidth: '100%' }} />
           <Typography mt={2}>{resultado.texto}</Typography>
         </Box>
       )
@@ -103,7 +89,7 @@ const ActuaEscenario = () => {
       {renderContenido()}
 
       <Typography align="center" variant="body2" sx={{ mt: 4 }}>
-        {textos[idioma].pasoTexto(paso + 1, escena.pasos.length)}
+        Paso {paso + 1} de {escena.pasos.length}
       </Typography>
 
       {paso > 0 && (
@@ -113,7 +99,7 @@ const ActuaEscenario = () => {
           variant="outlined"
           sx={{ position: 'fixed', top: '50%', left: 0, transform: 'translateY(-50%)', zIndex: 999 }}
         >
-          {textos[idioma].atras}
+          ATRÁS
         </Button>
       )}
 
@@ -125,7 +111,7 @@ const ActuaEscenario = () => {
           variant="contained"
           sx={{ position: 'fixed', top: '50%', right: 0, transform: 'translateY(-50%)', zIndex: 999 }}
         >
-          {textos[idioma].siguiente}
+          SIGUIENTE
         </Button>
       )}
     </Box>
