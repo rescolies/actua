@@ -3,7 +3,7 @@
   position: fixed;
   top: 50%;
   transform: translateY(-50%);
-  padding: 0.75rem 1rem;
+  padding: 0.5rem;
   background-color: #eee;
   border: 1px solid #ccc;
   text-transform: uppercase;
@@ -13,6 +13,9 @@
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
+  max-width: 60px;
+  word-break: break-word;
+  font-size: 0.75rem;
 }
 
 .boton-lateral.izquierda {
@@ -31,20 +34,49 @@
 
 @media (max-width: 768px) {
   .boton-lateral {
-    font-size: 0.85rem;
-    padding: 0.5rem;
+    font-size: 0.6rem;
+    padding: 0.3rem;
+    max-width: 50px;
   }
 
   .boton-lateral svg {
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
   }
 
-  .boton-lateral.izquierda {
-    left: 0;
+  .barra-progreso {
+    height: 1.5rem !important;
+    font-size: 0.9rem !important;
   }
 
-  .boton-lateral.derecha {
-    right: 0;
+  .titulo-fijo {
+    font-size: 1rem !important;
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 768px) and (orientation: landscape) {
+  .elecciones {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .opcion {
+    flex: 1 1 30%;
+    max-width: 30%;
+  }
+
+  .imagen-opcion {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .barra-progreso {
+    height: 1rem !important;
+  }
+
+  .titulo-fijo {
+    font-size: 0.85rem !important;
   }
 }
