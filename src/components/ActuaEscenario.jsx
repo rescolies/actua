@@ -11,11 +11,12 @@ const ActuaEscenario = () => {
 
   const escena = escenas[indiceEscena]
   const pasoActual = escena.pasos[paso]
+  const totalPasos = escena.pasos.length
 
   const avanzar = (op = '') => {
     if (pasoActual.tipo === 'eleccion' && !op) return
     if (pasoActual.tipo === 'eleccion') setEleccion(op)
-    if (paso < escena.pasos.length - 1) {
+    if (paso < totalPasos - 1) {
       setPaso(paso + 1)
     } else if (indiceEscena < escenas.length - 1) {
       setIndiceEscena(indiceEscena + 1)
@@ -28,16 +29,34 @@ const ActuaEscenario = () => {
     if (paso > 0) {
       setPaso(paso - 1)
     } else if (indiceEscena > 0) {
-      setIndiceEscena(indiceEscena - 1)
-      setPaso(escenas[indiceEscena - 1].pasos.length - 1)
+      const nuevaEscena = indiceEscena - 1
+      setIndiceEscena(nuevaEscena)
+      setPaso(escenas[nuevaEscena].pasos.length - 1)
+      setEleccion('')
     }
   }
+
+  const renderProgreso = () => (
+    <Box display="flex" justifyContent="center" gap={1} mt={4}>
+      {Array.from({ length: totalPasos }).map((_, i) => (
+        <Box
+          key={i}
+          sx={{
+            width: 12,
+            height: 12,
+            borderRadius: '50%',
+            backgroundColor: i <= paso ? '#333' : '#ccc'
+          }}
+        />
+      ))}
+    </Box>
+  )
 
   const renderContenido = () => {
     if (pasoActual.tipo === 'situacion') {
       return (
         <Box textAlign="center">
-          <img src={`/${pasoActual.imagen}`} alt="Escena" style={{ maxWidth: '100%' }} />
+          <img src={`/${pasoActual.imagen}`} alt="Escena" style={{ maxWidth: '100%', maxHeight: 'calc(100vh - 200px)', objectFit: 'contain' }} />
           <Typography mt={2}>{pasoActual.descripcion}</Typography>
         </Box>
       )
@@ -68,17 +87,15 @@ const ActuaEscenario = () => {
       const resultado = pasoActual.resultados[eleccion]
       return (
         <Box textAlign="center">
-          <img src={`/${resultado.imagen}`} alt={resultado.texto} style={{ maxWidth: '100%' }} />
+          <img src={`/${resultado.imagen}`} alt={resultado.texto} style={{ maxWidth: '100%', maxHeight: 'calc(100vh - 200px)', objectFit: 'contain' }} />
           <Typography mt={2}>{resultado.texto}</Typography>
         </Box>
       )
     }
   }
 
-  const hayOtraEscena = indiceEscena < escenas.length - 1
-
   return (
-    <Box sx={{ mt: 4, mb: 8, mx: { xs: '60px', sm: '80px' }, position: 'relative' }}>
+    <Box sx={{ mt: 4, mx: { xs: '60px', sm: '80px' }, position: 'relative', pb: 8 }}>
       <Typography variant="h4" align="center" gutterBottom>
         {escena.titulo}
       </Typography>
@@ -87,29 +104,44 @@ const ActuaEscenario = () => {
       </Typography>
 
       {renderContenido()}
+      {renderProgreso()}
 
-      <Typography align="center" variant="body2" sx={{ mt: 4 }}>
-        Paso {paso + 1} de {escena.pasos.length}
+      <Typography align="center" variant="body2" sx={{ mt: 2 }}>
+        Paso {paso + 1} de {totalPasos}
       </Typography>
 
-      {paso > 0 && (
+      {!(indiceEscena === 0 && paso === 0) && (
         <Button
           onClick={retroceder}
           startIcon={<ArrowBackIosNewIcon />}
           variant="outlined"
-          sx={{ position: 'fixed', top: '50%', left: 0, transform: 'translateY(-50%)', zIndex: 999 }}
+          sx={{
+            position: 'fixed',
+            top: '50%',
+            left: 10,
+            transform: 'translateY(-50%)',
+            zIndex: 10,
+            display: { xs: 'none', sm: 'flex' }
+          }}
         >
           ATRÁS
         </Button>
       )}
 
       {(pasoActual.tipo === 'situacion' ||
-        (pasoActual.tipo === 'resultado' && hayOtraEscena)) && (
+        (pasoActual.tipo === 'resultado' && indiceEscena < escenas.length - 1)) && (
         <Button
           onClick={() => avanzar()}
           endIcon={<ArrowForwardIosIcon />}
           variant="contained"
-          sx={{ position: 'fixed', top: '50%', right: 0, transform: 'translateY(-50%)', zIndex: 999 }}
+          sx={{
+            position: 'fixed',
+            top: '50%',
+            right: 10,
+            transform: 'translateY(-50%)',
+            zIndex: 10,
+            display: { xs: 'none', sm: 'flex' }
+          }}
         >
           SIGUIENTE
         </Button>

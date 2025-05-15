@@ -1,7 +1,6 @@
 {
   "name": "actua",
   "version": "1.0.0",
-  "description": "Herramienta digital interactiva para niños con autismo",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
