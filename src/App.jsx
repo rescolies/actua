@@ -4,10 +4,11 @@ import CssBaseline from '@mui/material/CssBaseline'
 import Container from '@mui/material/Container'
 import { useActua } from './context/ActuaContext'
 
-import Portada from './components/Portada'
-import IngresoAlumno from './components/IngresoAlumno'
-import MainMenu from './components/MainMenu'
+import Portada        from './components/Portada'
+import IngresoAlumno  from './components/IngresoAlumno'
+import MainMenu       from './components/MainMenu'
 import ActuaEscenario from './components/ActuaEscenario'
+import AdminPanel     from './components/AdminPanel'
 
 const theme = createTheme({
   palette: {
@@ -26,11 +27,12 @@ const theme = createTheme({
 function AppContent() {
   const { stage } = useActua()
   switch (stage) {
-    case 'portada':    return <Portada />
-    case 'ingreso':    return <IngresoAlumno />
-    case 'menu':       return <MainMenu />
-    case 'escenario':  return <ActuaEscenario />
-    default:           return null
+    case 'portada':   return <Portada />
+    case 'ingreso':   return <IngresoAlumno />
+    case 'menu':      return <MainMenu />
+    case 'escenario': return <ActuaEscenario />
+    case 'admin':     return <AdminPanel />
+    default:          return null
   }
 }
 

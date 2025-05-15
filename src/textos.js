@@ -2,21 +2,28 @@ const textos = {
   es: {
     ui: {
       // Portada
-      portadaTitle: 'ACTUA',
-      portadaButton: 'SIGUIENTE',
+      portadaTitle: 'ACTUM',
+      portadaButton: 'EMPEZAR',
 
       // Ingreso alumno
       ingresoPrompt: 'Introduce el nombre del alumno',
       ingresoLabel: 'Nombre',
       ingresoError: 'Nombre no válido',
-      ingresoButton: 'SIGUIENTE',
+      ingresoButton: 'REGISTRARSE',
 
       // Menú principal
       greeting: 'Hola,',
-      logout: 'LOGOUT',
+      logout: 'SALIR',
 
       // Menú lateral en escenario
+      inicioTitle: 'INICIO',
+      empezar: 'EMPEZAR',
+      inicio: 'INICIO',
       menu: 'MENÚ',
+
+      adminPanelTitle: 'Panel de Administrador',
+      cambiarUsuario: 'CAMBIAR USUARIO',
+      volverPortada: 'VOLVER A PORTADA',
 
       atras: 'ATRÁS',
       siguiente: 'SIGUIENTE',
@@ -212,18 +219,26 @@ const textos = {
   },
   ca: {
     ui: {
-      portadaTitle: 'ACTUA',
-      portadaButton: 'SEGÜENT',
+      portadaTitle: 'ACTUM',
+      portadaButton: 'COMENÇA',
 
       ingresoPrompt: 'Introdueix el nom de l’alumne',
       ingresoLabel: 'Nom',
       ingresoError: 'Nom no vàlid',
-      ingresoButton: 'SEGÜENT',
+      ingresoButton: 'REGISTRAR-SE',
 
       greeting: 'Hola,',
       logout: 'SORTIR',
 
       menu: 'MENÚ',
+      inicioTitle: 'INICI',
+      empezar: 'COMENÇAR',
+      inicio: 'INICI',
+      menu: 'MENÚ',
+
+      adminPanelTitle: 'Panel de Administrador',
+      cambiarUsuario: 'CANVIAR USUARI',     // en ca
+      volverPortada: 'TORNAR A PORTADA',     // en ca
 
       atras: 'ENRERE',
       siguiente: 'SEGÜENT',

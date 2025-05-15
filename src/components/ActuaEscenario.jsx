@@ -12,6 +12,7 @@ import {
   useMediaQuery
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
+import HomeIcon from '@mui/icons-material/Home'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import textos from '../textos'
@@ -32,6 +33,7 @@ const ActuaEscenario = () => {
     setPaso,
     setElecciones,
     cambiarIdioma,
+    user,
     setStage
   } = useActua()
 
@@ -58,7 +60,22 @@ const ActuaEscenario = () => {
     // Si es elección, guarda y quizá terminas
     if (pasoActual.tipo === 'eleccion') {
       if (!id) return
+      // 1) guardamos en local
       setElecciones(prev => ({ ...prev, [escena.id]: id }))
+      // 2) enviamos al servidor
+      fetch('/api/guardarRespuesta', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          alumno: user.name,
+          datetime: new Date().toISOString(),
+          situacionId: escena.id,
+          paso,
+          tipoPaso: 'eleccion',
+          respuesta: id,
+          idioma
+        })
+      }).catch(console.error)
       // Si es la última escena y último paso, al menú
       if (isLastScene && isLastStep) {
         setStage('menu')
@@ -182,20 +199,30 @@ const ActuaEscenario = () => {
 
       <Container maxWidth="md" sx={{ pt: 1, position: 'relative' }}>
         {/* Menú + selector de idioma encima del título */}
-        <Stack direction="row" spacing={2} justifyContent="left" mb={0}>
+        <Stack direction="row" spacing={2} alignItems="center" mb={1}>
+          {/* 1) Volver a pantalla de inicio */}
+          <Button
+            variant="text"
+            size="small"
+            startIcon={<HomeIcon />}
+            onClick={() => setStage('menu')}
+          >
+            {data.ui.inicio}
+          </Button>
+
+          {/* 2) Abrir Drawer */}
           <IconButton onClick={() => setMenuOpen(true)}>
             <MenuIcon />
             <Typography sx={{ ml: 0.5 }}>{data.ui.menu}</Typography>
           </IconButton>
-          <Button variant="outlined" size="small" onClick={() => cambiarIdioma(idioma === 'es' ? 'ca' : 'es')}>
-            {idioma === 'es' ? 'CAT' : 'ES'}
-          </Button>
+
+          {/* 3) Selector de idioma */}
           <Button
-            variant="text"
+            variant="outlined"
             size="small"
-            onClick={() => setStage('menu')}
-            sx={{ ml: 2 }}>
-            {textos[idioma].ui.menu}
+            onClick={() => cambiarIdioma(idioma === 'es' ? 'ca' : 'es')}
+          >
+            {idioma === 'es' ? 'CAT' : 'ES'}
           </Button>
         </Stack>
 

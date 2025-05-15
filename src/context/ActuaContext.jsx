@@ -4,19 +4,17 @@ import useIdioma from '../hooks/useIdioma'
 const ActuaContext = createContext()
 
 export function ActuaProvider({ children }) {
-  const [stage, setStage] = useState('portada')       // portada → ingreso → menu → escenario
-  const [user, setUser] = useState(null)              // { name, date }
-
-  const [perfiles, setPerfiles] = useState({})        // { [name]: { date, elecciones } }
-  const [elecciones, setElecciones] = useState({})    // elecciones del perfil actual
-
+  const [stage, setStage]       = useState('portada')       // portada → ingreso → menu → escenario → admin
+  const [user, setUser]         = useState(null)            // { name, date }
+  const [perfiles, setPerfiles] = useState({})              // { [name]: { date, elecciones } }
+  const [elecciones, setElecciones] = useState({})          // estado actual de elecciones
   const [indiceEscena, setIndiceEscena] = useState(0)
   const [paso, setPaso] = useState(0)
   const reiniciarPaso = () => setPaso(0)
 
   const [idioma, cambiarIdioma] = useIdioma()
 
-  // Carga perfiles al init
+  // Carga perfiles desde localStorage
   useEffect(() => {
     const stored = localStorage.getItem('perfiles')
     if (stored) setPerfiles(JSON.parse(stored))
@@ -27,12 +25,15 @@ export function ActuaProvider({ children }) {
     localStorage.setItem('perfiles', JSON.stringify(perfiles))
   }, [perfiles])
 
-  // Cuando elecciones cambian, actualiza el perfil actual
+  // Actualiza el perfil actual cuando cambian elecciones
   useEffect(() => {
     if (user) {
       setPerfiles(prev => ({
         ...prev,
-        [user.name]: { date: user.date, elecciones }
+        [user.name]: {
+          date: user.date,
+          elecciones
+        }
       }))
     }
   }, [elecciones])
@@ -44,7 +45,6 @@ export function ActuaProvider({ children }) {
       setElecciones(existing.elecciones)
       setUser({ name, date: existing.date })
     } else {
-      // nuevo perfil
       setElecciones({})
       setUser({ name, date: now })
       setPerfiles(prev => ({
@@ -67,7 +67,8 @@ export function ActuaProvider({ children }) {
     <ActuaContext.Provider
       value={{
         stage, setStage,
-        user, login, logout,
+        user, perfiles,
+        login, logout,
         idioma, cambiarIdioma,
         elecciones, setElecciones,
         indiceEscena, setIndiceEscena,
