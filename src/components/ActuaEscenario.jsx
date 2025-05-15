@@ -5,14 +5,14 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import textos from '../textos'
 
 const ActuaEscenario = () => {
-  // Idioma
+  // --- Idioma ---
   const [idioma, setIdioma] = useState(() => localStorage.getItem('idioma') || 'es')
   useEffect(() => localStorage.setItem('idioma', idioma), [idioma])
 
   const data = textos[idioma]
   const escenas = data.escenas
 
-  // Estado
+  // --- Estado ---
   const [indiceEscena, setIndiceEscena] = useState(0)
   const [paso, setPaso] = useState(0)
   const [elecciones, setElecciones] = useState(() => {
@@ -21,7 +21,7 @@ const ActuaEscenario = () => {
   })
   useEffect(() => localStorage.setItem('elecciones', JSON.stringify(elecciones)), [elecciones])
 
-  // Elección actual
+  // --- Elección actual ---
   const [eleccion, setEleccion] = useState('')
   useEffect(() => {
     setEleccion(elecciones[indiceEscena] || '')
@@ -31,7 +31,7 @@ const ActuaEscenario = () => {
   const pasoActual = escena.pasos[paso]
   const totalPasos = escena.pasos.length
 
-  // Avanzar
+  // --- Avanzar ---
   const avanzar = (id = '') => {
     if (pasoActual.tipo === 'eleccion') {
       if (!id) return
@@ -47,7 +47,7 @@ const ActuaEscenario = () => {
     }
   }
 
-  // Retroceder
+  // --- Retroceder ---
   const retroceder = () => {
     if (paso > 0) {
       setPaso(paso - 1)
@@ -59,7 +59,7 @@ const ActuaEscenario = () => {
     }
   }
 
-  // Progreso visual
+  // --- Progreso visual ---
   const renderProgreso = () => (
     <Box display="flex" justifyContent="center" gap={1} mt={4}>
       {Array.from({ length: totalPasos }).map((_, i) => (
@@ -76,35 +76,22 @@ const ActuaEscenario = () => {
     </Box>
   )
 
-  // Contenido según paso
+  // --- Contenido según paso ---
   const renderContenido = () => {
     if (pasoActual.tipo === 'situacion') {
       return (
-        <>
-          {/* Pictogramas */}
-          <Box display="flex" justifyContent="center" gap={2} mb={2}>
-            {escena.pictos.map((pic, i) => (
-              <img
-                key={i}
-                src={`/${pic}`}
-                alt={`Picto ${i + 1}`}
-                style={{ width: 40, height: 40 }}
-              />
-            ))}
-          </Box>
-          <Box textAlign="center">
-            <img
-              src={`/${pasoActual.imagen}`}
-              alt="Escena"
-              style={{
-                maxWidth: '100%',
-                maxHeight: 'calc(100vh - 260px)',
-                objectFit: 'contain'
-              }}
-            />
-            <Typography mt={2}>{pasoActual.descripcion}</Typography>
-          </Box>
-        </>
+        <Box textAlign="center">
+          <img
+            src={`/${pasoActual.imagen}`}
+            alt="Escena"
+            style={{
+              maxWidth: '100%',
+              maxHeight: 'calc(100vh - 260px)',
+              objectFit: 'contain'
+            }}
+          />
+          <Typography mt={2}>{pasoActual.descripcion}</Typography>
+        </Box>
       )
     }
     if (pasoActual.tipo === 'eleccion') {
@@ -131,7 +118,7 @@ const ActuaEscenario = () => {
         </Grid>
       )
     }
-    // resultado
+    // tipo resultado
     const resultado = pasoActual.resultados[eleccion]
     if (!resultado) {
       return (
@@ -165,22 +152,38 @@ const ActuaEscenario = () => {
         </Button>
       </Box>
 
-      {/* Título y subtítulo */}
+      {/* Título */}
       <Typography variant="h4" align="center" gutterBottom>
         {escena.titulo}
       </Typography>
+
+      {/* ← AHORA los pictogramas justo aquí, **entre** título y subtítulo */}
+      {pasoActual.tipo === 'situacion' && escena.pictos && (
+        <Box display="flex" justifyContent="center" gap={2} mb={1}>
+          {escena.pictos.map((pic, i) => (
+            <img
+              key={i}
+              src={`/${pic}`}
+              alt={`Picto ${i + 1}`}
+              style={{ width: 40, height: 40 }}
+            />
+          ))}
+        </Box>
+      )}
+
+      {/* Subtítulo */}
       <Typography variant="subtitle1" align="center" sx={{ mb: 2 }}>
         {pasoActual.titulo}
       </Typography>
 
-      {/* Contenido, pictos y progreso */}
+      {/* Contenido y resto */}
       {renderContenido()}
       {renderProgreso()}
       <Typography align="center" variant="body2" sx={{ mt: 2 }}>
         {data.ui.pasoTexto(paso + 1, totalPasos)}
       </Typography>
 
-      {/* Botones laterales */}
+      {/* Botones ATRÁS/SIGUIENTE */}
       {!(indiceEscena === 0 && paso === 0) && (
         <Button
           onClick={retroceder}
