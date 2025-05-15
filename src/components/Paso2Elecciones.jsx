@@ -16,7 +16,7 @@ function Paso2Elecciones({ avanzar }) {
   
     return (
       <>
-        <h2 className="titulo">¿QUÉ PUEDE HACER EL NIÑO Y?</h2>
+        <h2 className="subtitulo">¿QUÉ PUEDE HACER EL NIÑO Y?</h2>
         <div className="elecciones">
           {elecciones.map((opcion, index) => (
             <div key={index} className="opcion" onClick={() => avanzar(opcion.descripcion)}>

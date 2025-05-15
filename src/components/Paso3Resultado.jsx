@@ -13,12 +13,14 @@ function Paso3Resultado({ eleccion }) {
   
     return (
       <>
-        <h2 className="titulo">CONSECUENCIA DE LA ELECCIÓN</h2>
-        <p className="descripcion">{textos[eleccion]}</p>
-        <img src={imagenes[eleccion]} alt={textos[eleccion]} className="imagen" />
+        <h2 className="subtitulo">CONSECUENCIA PROBABLE</h2>
+        <div className="opcion">
+          <img src={imagenes[eleccion]} alt={textos[eleccion]} className="imagen-opcion" />
+          <p className="descripcion">{textos[eleccion]}</p>
+        </div>
       </>
     )
-  }
+  }  
   
   export default Paso3Resultado
   

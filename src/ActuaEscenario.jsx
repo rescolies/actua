@@ -20,11 +20,17 @@ function ActuaEscenario() {
 
   return (
     <div className="contenedor-paso">
-      <BarraProgreso pasoActual={pasoActual} total={3} />
+      <header className="titulo-fijo">
+        YO TAMBIÉN QUIERO PATATAS
+      </header>
 
-      {pasoActual === 1 && <Paso1Situacion avanzar={avanzar} />}
-      {pasoActual === 2 && <Paso2Elecciones avanzar={avanzar} />}
-      {pasoActual === 3 && <Paso3Resultado eleccion={eleccion} retroceder={retroceder} />}
+      <div className="contenido-pasos">
+        {pasoActual === 1 && <Paso1Situacion avanzar={avanzar} />}
+        {pasoActual === 2 && <Paso2Elecciones avanzar={avanzar} />}
+        {pasoActual === 3 && <Paso3Resultado eleccion={eleccion} />}
+      </div>
+
+      <BarraProgreso pasoActual={pasoActual} total={3} />
 
       <div className="botones-navegacion">
         <button onClick={retroceder} disabled={pasoActual === 1}>

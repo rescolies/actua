@@ -1,8 +1,11 @@
-function Paso1Situacion() {
+function Paso1Situacion({ avanzar }) {
     return (
       <>
-        <h2 className="titulo">EL NIÑO Y OBSERVA A DOS NIÑOS COMIENDO PATATAS</h2>
-        <img src="/escena1.png" alt="Escena inicial" className="imagen" />
+        <h2 className="subtitulo">SITUACIÓN</h2>
+        <div className="opcion" onClick={() => avanzar()}>
+          <img src="/escena1.png" alt="Escena inicial" className="imagen-opcion" />
+          <p className="descripcion">EL NIÑO Y OBSERVA A DOS NIÑOS COMIENDO PATATAS</p>
+        </div>
       </>
     )
   }
