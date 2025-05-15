@@ -5,27 +5,23 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import textos from '../textos'
 
 const ActuaEscenario = () => {
-  // --- Idioma ---
+  // Idioma
   const [idioma, setIdioma] = useState(() => localStorage.getItem('idioma') || 'es')
   useEffect(() => localStorage.setItem('idioma', idioma), [idioma])
 
-  // --- Datos ---
   const data = textos[idioma]
   const escenas = data.escenas
 
-  // --- Estado de escena, paso y elecciones ---
+  // Estado
   const [indiceEscena, setIndiceEscena] = useState(0)
   const [paso, setPaso] = useState(0)
   const [elecciones, setElecciones] = useState(() => {
     const saved = localStorage.getItem('elecciones')
     return saved ? JSON.parse(saved) : {}
   })
+  useEffect(() => localStorage.setItem('elecciones', JSON.stringify(elecciones)), [elecciones])
 
-  useEffect(() => {
-    localStorage.setItem('elecciones', JSON.stringify(elecciones))
-  }, [elecciones])
-
-  // --- Elección actual ---
+  // Elección actual
   const [eleccion, setEleccion] = useState('')
   useEffect(() => {
     setEleccion(elecciones[indiceEscena] || '')
@@ -35,13 +31,13 @@ const ActuaEscenario = () => {
   const pasoActual = escena.pasos[paso]
   const totalPasos = escena.pasos.length
 
-  // --- Avanzar ---
-  const avanzar = (op = '') => {
+  // Avanzar
+  const avanzar = (id = '') => {
     if (pasoActual.tipo === 'eleccion') {
-      if (!op) return
-      const n = { ...elecciones, [indiceEscena]: op }
-      setElecciones(n)
-      setEleccion(op)
+      if (!id) return
+      const nuev = { ...elecciones, [indiceEscena]: id }
+      setElecciones(nuev)
+      setEleccion(id)
     }
     if (paso < totalPasos - 1) {
       setPaso(paso + 1)
@@ -51,7 +47,7 @@ const ActuaEscenario = () => {
     }
   }
 
-  // --- Retroceder ---
+  // Retroceder
   const retroceder = () => {
     if (paso > 0) {
       setPaso(paso - 1)
@@ -63,7 +59,7 @@ const ActuaEscenario = () => {
     }
   }
 
-  // --- Progreso visual ---
+  // Progreso visual
   const renderProgreso = () => (
     <Box display="flex" justifyContent="center" gap={1} mt={4}>
       {Array.from({ length: totalPasos }).map((_, i) => (
@@ -80,31 +76,44 @@ const ActuaEscenario = () => {
     </Box>
   )
 
-  // --- Contenido ---
+  // Contenido según paso
   const renderContenido = () => {
     if (pasoActual.tipo === 'situacion') {
       return (
-        <Box textAlign="center">
-          <img
-            src={`/${pasoActual.imagen}`}
-            alt="Escena"
-            style={{
-              maxWidth: '100%',
-              maxHeight: 'calc(100vh - 200px)',
-              objectFit: 'contain'
-            }}
-          />
-          <Typography mt={2}>{pasoActual.descripcion}</Typography>
-        </Box>
+        <>
+          {/* Pictogramas */}
+          <Box display="flex" justifyContent="center" gap={2} mb={2}>
+            {escena.pictos.map((pic, i) => (
+              <img
+                key={i}
+                src={`/${pic}`}
+                alt={`Picto ${i + 1}`}
+                style={{ width: 40, height: 40 }}
+              />
+            ))}
+          </Box>
+          <Box textAlign="center">
+            <img
+              src={`/${pasoActual.imagen}`}
+              alt="Escena"
+              style={{
+                maxWidth: '100%',
+                maxHeight: 'calc(100vh - 260px)',
+                objectFit: 'contain'
+              }}
+            />
+            <Typography mt={2}>{pasoActual.descripcion}</Typography>
+          </Box>
+        </>
       )
     }
     if (pasoActual.tipo === 'eleccion') {
       return (
         <Grid container spacing={2}>
           {pasoActual.opciones.map((op) => (
-            <Grid item xs={12} sm={6} key={op.texto}>
+            <Grid item xs={12} sm={6} key={op.id}>
               <Box
-                onClick={() => avanzar(op.texto)}
+                onClick={() => avanzar(op.id)}
                 sx={{
                   border: '1px solid #aaa',
                   p: 2,
@@ -149,14 +158,14 @@ const ActuaEscenario = () => {
 
   return (
     <Box sx={{ mt: 4, mx: { xs: '60px', sm: '80px' }, position: 'relative', pb: 8 }}>
-      {/* Idioma */}
+      {/* Selector idioma */}
       <Box sx={{ position: 'absolute', top: 16, right: 16 }}>
         <Button size="small" onClick={() => setIdioma(idioma === 'es' ? 'ca' : 'es')}>
           {idioma === 'es' ? 'CAT' : 'ES'}
         </Button>
       </Box>
 
-      {/* Título */}
+      {/* Título y subtítulo */}
       <Typography variant="h4" align="center" gutterBottom>
         {escena.titulo}
       </Typography>
@@ -164,16 +173,14 @@ const ActuaEscenario = () => {
         {pasoActual.titulo}
       </Typography>
 
-      {/* Contenido */}
+      {/* Contenido, pictos y progreso */}
       {renderContenido()}
-
-      {/* Progreso */}
       {renderProgreso()}
       <Typography align="center" variant="body2" sx={{ mt: 2 }}>
         {data.ui.pasoTexto(paso + 1, totalPasos)}
       </Typography>
 
-      {/* Botones */}
+      {/* Botones laterales */}
       {!(indiceEscena === 0 && paso === 0) && (
         <Button
           onClick={retroceder}
