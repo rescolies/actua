@@ -1,13 +1,15 @@
-// src/components/ActuaEscenario.jsx
 import React, { useState } from 'react'
 import {
+  Container,
   Box,
   Typography,
   Button,
   Grid,
   Drawer,
   IconButton,
-  Stack
+  Stack,
+  useTheme,
+  useMediaQuery
 } from '@mui/material'
 import MenuIcon from '@mui/icons-material/Menu'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
@@ -17,6 +19,9 @@ import { useActua } from '../context/ActuaContext'
 import DrawerMenu from './DrawerMenu'
 
 const ActuaEscenario = () => {
+  const theme = useTheme()
+  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'))
+
   const {
     indiceEscena,
     paso,
@@ -38,8 +43,8 @@ const ActuaEscenario = () => {
   const totalPasos = escena.pasos.length
   const eleccion = elecciones[escena.id] || ''
 
-  const goToScene = newIdx => {
-    setIndiceEscena(newIdx)
+  const goToScene = idx => {
+    setIndiceEscena(idx)
     reiniciarPaso()
     setMenuOpen(false)
   }
@@ -61,25 +66,20 @@ const ActuaEscenario = () => {
     if (paso > 0) {
       setPaso(paso - 1)
     } else if (indiceEscena > 0) {
-      const ne = indiceEscena - 1
-      const plen = escenas[ne].pasos.length
-      setIndiceEscena(ne)
-      setPaso(plen - 1)
+      const prev = indiceEscena - 1
+      setIndiceEscena(prev)
+      setPaso(escenas[prev].pasos.length - 1)
     }
   }
 
   const renderContenido = () => {
     if (pasoActual.tipo === 'situacion') {
       return (
-        <Box textAlign="center">
+        <Box textAlign="center" mb={2}>
           <img
             src={`/${pasoActual.imagen}`}
             alt="Escena"
-            style={{
-              maxWidth: '100%',
-              height: 'auto',
-              objectFit: 'contain'
-            }}
+            style={{ maxWidth: '80%', height: 'auto' }}
           />
           <Typography mt={1}>{pasoActual.descripcion}</Typography>
         </Box>
@@ -87,21 +87,27 @@ const ActuaEscenario = () => {
     }
     if (pasoActual.tipo === 'eleccion') {
       return (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} mb={2}>
           {pasoActual.opciones.map(op => (
             <Grid item xs={12} sm={6} key={op.id}>
               <Box
                 onClick={() => avanzar(op.id)}
                 sx={{
-                  border: '1px solid #aaa',
+                  border: 1,
+                  borderColor: 'grey.400',
                   p: 2,
                   cursor: 'pointer',
                   textAlign: 'center',
-                  backgroundColor: '#f9f9f9',
-                  '&:hover': { backgroundColor: '#e0e0e0' }
+                  borderRadius: 1,
+                  '&:hover': { backgroundColor: '#e0e0e0' 
+                   }
                 }}
               >
-                <img src={`/${op.imagen}`} alt={op.texto} style={{ maxWidth: '100%', height: 'auto' }} />
+                <img
+                  src={`/${op.imagen}`}
+                  alt={op.texto}
+                  style={{ maxWidth: '100%', height: 'auto' }}
+                />
                 <Typography mt={1}>{op.texto}</Typography>
               </Box>
             </Grid>
@@ -109,7 +115,6 @@ const ActuaEscenario = () => {
         </Grid>
       )
     }
-    // resultado
     const resultado = pasoActual.resultados[eleccion]
     if (!resultado) {
       return (
@@ -119,24 +124,19 @@ const ActuaEscenario = () => {
       )
     }
     return (
-      <Box textAlign="center">
+      <Box textAlign="center" mb={1}>
         <img
           src={`/${resultado.imagen}`}
           alt={resultado.texto}
-          style={{
-            maxWidth: '100%',
-            height: 'auto',
-            objectFit: 'contain'
-          }}
+          style={{ maxWidth: '100%', height: 'auto' }}
         />
-        <Typography mt={2}>{resultado.texto}</Typography>
+        <Typography mt={1}>{resultado.texto}</Typography>
       </Box>
     )
   }
 
   return (
     <>
-      {/* DRAWER MENU */}
       <Drawer open={menuOpen} onClose={() => setMenuOpen(false)}>
         <DrawerMenu
           items={escenas}
@@ -147,58 +147,42 @@ const ActuaEscenario = () => {
         />
       </Drawer>
 
-      {/* ESCENARIO */}
-      <Box
-        sx={{
-          mt: 0,
-          mx: { xs: '60px', sm: '150px' },
-          position: 'relative',
-          pb: 1
-        }}
-      >
-        {/* Menú + Idioma encima del título, alineado a la izquierda */}
-        <Stack
-          direction="row"
-          spacing={0}
-          justifyContent="flex-start"
-          sx={{ mb: 0 }}
-        >
-          <IconButton size="large" onClick={() => setMenuOpen(true)}>
+      <Container maxWidth="md" sx={{ pt: 1, position: 'relative' }}>
+        {/* Menú + selector de idioma encima del título */}
+        <Stack direction="row" spacing={2} justifyContent="left" mb={0}>
+          <IconButton onClick={() => setMenuOpen(true)}>
             <MenuIcon />
             <Typography sx={{ ml: 0.5 }}>{data.ui.menu}</Typography>
           </IconButton>
-          <Button
-            size="small"
-            onClick={() => cambiarIdioma(idioma === 'es' ? 'ca' : 'es')}
-          >
+          <Button variant="outlined" size="small" onClick={() => cambiarIdioma(idioma === 'es' ? 'ca' : 'es')}>
             {idioma === 'es' ? 'CAT' : 'ES'}
           </Button>
         </Stack>
 
         {/* Título */}
-        <Typography variant="h4" align="center" gutterBottom>
+        <Typography variant="h5" align="center" gutterBottom>
           {escena.titulo}
         </Typography>
 
-        {/* Pictogramas (solo en paso=“situacion”) */}
+        {/* Pictos */}
         {pasoActual.tipo === 'situacion' && escena.pictos && (
-          <Box display="flex" justifyContent="center" gap={4} mb={5}>
+          <Stack direction="row" spacing={2} justifyContent="center" mb={2}>
             {escena.pictos.map((pic, i) => (
-              <img key={i} src={`/${pic}`} alt={`Picto ${i + 1}`} style={{ width: 40, height: 40 }} />
+              <Box key={i} component="img" src={`/${pic}`} alt={`Picto ${i+1}`} width={40} height={40} />
             ))}
-          </Box>
+          </Stack>
         )}
 
         {/* Subtítulo */}
-        <Typography variant="subtitle1" align="center" sx={{ mb: 1 }}>
+        <Typography variant="subtitle1" align="center" mb={0}>
           {pasoActual.titulo}
         </Typography>
 
-        {/* Contenido */}
+        {/* Contenido principal */}
         {renderContenido()}
 
         {/* Progreso */}
-        <Box display="flex" justifyContent="center" gap={1} mt={4}>
+        <Stack direction="row" spacing={1} justifyContent="center" mt={2}>
           {Array.from({ length: totalPasos }).map((_, i) => (
             <Box
               key={i}
@@ -206,68 +190,90 @@ const ActuaEscenario = () => {
                 width: 12,
                 height: 12,
                 borderRadius: '50%',
-                backgroundColor: i <= paso ? '#333' : '#ccc'
+                bgcolor: i <= paso ? 'text.primary' : 'grey.300'
               }}
             />
           ))}
-        </Box>
-        <Typography align="center" variant="body2" sx={{ mt: 1 }}>
+        </Stack>
+        <Typography align="center" variant="body2" mt={1}>
           {data.ui.pasoTexto(paso + 1, totalPasos)}
         </Typography>
 
-        {/* Botón ATRÁS */}
-        {!(indiceEscena === 0 && paso === 0) && (
-          <Button
-            onClick={retroceder}
-            variant="outlined"
-            sx={{
-              position: 'fixed',
-              top: '50%',
-              left: 4,
-              transform: 'translateY(-50%)',
-              zIndex: 10,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 70,
-              height: 70,
-              backgroundColor: 'transparent',
-              color: 'inherit'
-            }}
-          >
-            <ArrowBackIosNewIcon fontSize="small" />
-            <Typography variant="caption" sx={{mt : 1 } }>{data.ui.atras}</Typography>
-          </Button>
+        {/* Navegación lateral en desktop / footer en móvil */}
+        {isSmUp ? (
+          <>
+            {!(indiceEscena === 0 && paso === 0) && (
+              <Button
+                onClick={retroceder}
+                sx={{
+                  position: 'fixed',
+                  top: '50%',
+                  left: theme.spacing(1),
+                  transform: 'translateY(-50%)',
+                  minWidth: 48,
+                  p: 1,
+                  borderRadius: 1,
+                  zIndex: 10,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 70,
+                  height: 70,
+                  backgroundColor: 'transparent',
+                  color: 'inherit'
+                }}
+                variant="outlined"
+              >
+                <ArrowBackIosNewIcon />
+                <Typography variant="caption" sx={{mt : 1 } }>{data.ui.atras}</Typography>
+              </Button>
+            )}
+            {(pasoActual.tipo === 'situacion' ||
+              (pasoActual.tipo === 'resultado' && indiceEscena < escenas.length - 1)) && (
+              <Button
+                onClick={() => avanzar()}
+                sx={{
+                  position: 'fixed',
+                  top: '50%',
+                  right: theme.spacing(1),
+                  transform: 'translateY(-50%)',
+                  minWidth: 48,
+                  p: 1,
+                  borderRadius: 1,
+                  zIndex: 10,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 70,
+                  height: 70,
+                  backgroundColor: 'transparent',
+                  color: 'inherit',
+                }}
+                variant="outlined"
+              >
+                <ArrowForwardIosIcon />
+                <Typography variant="caption" sx={{mt : 1 } }>{data.ui.siguiente}</Typography>
+              </Button>
+            )}
+          </>
+        ) : (
+          <Box display="flex" justifyContent="space-between" mt={4}>
+            <Button onClick={retroceder} disabled={indiceEscena === 0 && paso === 0}>
+            <ArrowBackIosNewIcon />{data.ui.atras}
+            </Button>
+            <Button
+              onClick={() => avanzar()}
+              disabled={
+                pasoActual.tipo === 'eleccion' && !eleccion
+              }
+            >
+              {data.ui.siguiente}
+              <ArrowForwardIosIcon /></Button>
+          </Box>
         )}
-
-        {/* Botón SIGUIENTE */}
-        {(pasoActual.tipo === 'situacion' ||
-          (pasoActual.tipo === 'resultado' && indiceEscena < escenas.length - 1)) && (
-          <Button
-            onClick={() => avanzar()}
-            variant="outlined"
-            sx={{
-              position: 'fixed',
-              top: '50%',
-              right: 4,
-              transform: 'translateY(-50%)',
-              zIndex: 10,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: 70,
-              height: 70,
-              backgroundColor: 'transparent',
-              color: 'inherit',
-            }}
-          >
-            <ArrowForwardIosIcon fontSize="small" />
-            <Typography variant="caption" sx={{mt : 1 } }>{data.ui.siguiente}</Typography>
-          </Button>
-        )}
-      </Box>
+      </Container>
     </>
   )
 }
