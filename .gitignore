@@ -25,3 +25,5 @@ Thumbs.db
 *.log
 *.tgz
 *.zip
+
+api/local.settings.json

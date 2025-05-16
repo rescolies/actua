@@ -1,12 +1,20 @@
+const { CosmosClient } = require('@azure/cosmos')
+
 module.exports = async function (context) {
-    // Aquí recuperarías todos los alumnos de la base de datos; como ejemplo:
-    // const { resources } = await cosmosContainer.items.readAll().fetchAll()
-    // context.res = { status: 200, body: resources }
-  
-    // Stub mientras no tengas BD, devolvemos un array vacío:
-    context.res = {
-      status: 200,
-      body: []
-    }
+  const endpoint = process.env.COSMOS_DB_CONNECTION
+  const client   = new CosmosClient(endpoint)
+  const db       = client.database(process.env.COSMOS_DB_DATABASE)
+  const container = db.container(process.env.COSMOS_DB_CONTAINER)
+
+  const { resources } = await container.items.readAll().fetchAll()
+  // Sólo devolvemos el nombre y la fecha de registro
+  const respuesta = resources.map(a => ({
+    nombre: a.nombre,
+    fechaRegistro: a.date
+  }))
+
+  context.res = {
+    status: 200,
+    body: respuesta
   }
-  
+}
