@@ -31,15 +31,17 @@ const textos = {
       errorSinEleccion: 'No hay resultado disponible. Vuelve a hacer una elección.',
       // Etiquetas de categorías
       categories: {
-        sociales: 'Situaciones sociales',
-        emociones: 'Emociones',
-        coherencia: 'Coherencia central'
+        social: 'Situaciones sociales',
+        emocionajena: 'Emociones ajenas',
+        emocionpropia: 'Emociones propias',
+        teoriamente: 'Teoria de la mente',
+        coherencia: 'Coherencia central',
       }
     },
     escenas: [
       {
         id: 'patatas',
-        categoria: 'sociales',
+        categoria: 'social',
         titulo: 'YO TAMBIÉN QUIERO PATATAS',
         pictos: [
           'situacion1/picto1.png',
@@ -77,8 +79,39 @@ const textos = {
         })()
       },
       {
+        id: 'aniversario',
+        categoria: 'emocionpropia',
+        titulo: 'TROZO PEQUEÑO DE PASTEL EN FIESTA DE ANIVERSARIO',
+        pictos: [
+          'emocionpropiaAniversario/picto1.png',
+          'emocionpropiaAniversario/picto2.png',
+          'emocionpropiaAniversario/picto3.png'
+        ],
+        pasos: (() => {
+          const base = 'emocionpropiaAniversario/';
+          return [
+            {
+              tipo: 'situacion',
+              titulo: 'SITUACIÓN',
+              descripcion: 'TODOS COMEN PASTEL EN LA FIESTA DE ANIVERSARIO DE UN AMIGO. A TI TE DAN UN TROZO MUCHO MÁS PEQUEÑO QUE AL RESTO, ALGUNOS RÍEN',
+              imagen: base + 'escena1.png'
+            },
+            {
+              tipo: 'eleccion',
+              titulo: '¿CÓMO REACCIONAS?',
+              opciones: [
+                { id: 'nada', texto: 'ME PONGO TRISTE', imagen: base + 'eleccion1.png' },
+                { id: 'enfado', texto: 'PREGUNTO POR QUÉ ME HAN DADO MENOS', imagen: base + 'eleccion2.png' },
+                { id: 'gesto', texto: 'RÍO CON LOS OTROS', imagen: base + 'eleccion3.png' },
+                { id: 'gesto', texto: 'ME PONGO CONTENTO', imagen: base + 'eleccion4.png' }
+              ]
+            },
+          ]
+        })()
+      },
+      {
         id: 'juguete',
-        categoria: 'emociones',
+        categoria: 'emocionajena',
         titulo: 'SE ROMPE UN JUGUETE',
         pictos: [
           'situacion2/picto1.png',
@@ -118,7 +151,7 @@ const textos = {
       },
       {
         id: 'emocion1',
-        categoria: 'emociones',
+        categoria: 'emocionajena',
         titulo: '¿CÓMO TE SIENTES?',
         pictos: [
           // si quieres pictogramas, p.ej. 'emocion1/picto1.png', …
@@ -163,7 +196,7 @@ const textos = {
         },
         {
           id: 'emocion2',
-          categoria: 'emociones',
+          categoria: 'emocionajena',
           titulo: 'PARTIDO DE FUTBOL',
           pictos: [
             // si quieres pictogramas, p.ej. 'emocion1/picto1.png', …
@@ -246,15 +279,17 @@ const textos = {
       errorSinEleccion: 'No hi ha resultat disponible. Torna a fer una elecció.',
 
       categories: {
-        sociales: 'Situacions socials',
-        emociones: 'Emocions',
-        coherencia: 'Coherència central'
+        social: 'Situacions socials',
+        emocionajena: 'Emocions dels altres',
+        emocionpropia: 'Emocions pròpies',
+        teoriamente: 'Teoria de la ment',
+        coherencia: 'Coherència central',
       }
     },
     escenas: [
       {
         id: 'patatas',
-        categoria: 'sociales',
+        categoria: 'social',
         titulo: 'JO TAMBÉ VULL PATATES',
         pictos: [
           'situacion1/picto1.png',
@@ -292,8 +327,39 @@ const textos = {
         })()
       },
       {
+        id: 'aniversario',
+        categoria: 'emocionpropia',
+        titulo: 'TROZO PEQUEÑO DE PASTEL EN FIESTA DE ANIVERSARIO',
+        pictos: [
+          'emocionpropiaAniversario/picto1.png',
+          'emocionpropiaAniversario/picto2.png',
+          'emocionpropiaAniversario/picto3.png'
+        ],
+        pasos: (() => {
+          const base = 'emocionpropiaAniversario/';
+          return [
+            {
+              tipo: 'situacion',
+              titulo: 'SITUACIÓ',
+              descripcion: "TOTS MENGEN PASTÍS A LA FESTA D'ANIVERSARIO D'UN AMIC. A TU TE'N DONEN UN TROS MOLT MÉS PETIT QUE A LA RESTA, ALGUNS RIUEN.",
+              imagen: base + 'escena1.png'
+            },
+            {
+              tipo: 'eleccion',
+              titulo: '¿CÓMO REACCIONAS?',
+              opciones: [
+                { id: 'nada', texto: 'EM POSO TRIST', imagen: base + 'eleccion1.png' },
+                { id: 'enfado', texto: 'PREGUNTO POR QUÉ ME HAN DADO MENOS', imagen: base + 'eleccion2.png' },
+                { id: 'gesto', texto: 'RÍO CON LOS OTROS', imagen: base + 'eleccion3.png' },
+                { id: 'gesto', texto: 'ME PONGO CONTENTO', imagen: base + 'eleccion4.png' }
+              ]
+            },
+          ]
+        })()
+      },
+      {
         id: 'juguete',
-        categoria: 'emociones',
+        categoria: 'emocionajena',
         titulo: 'ES TRONCA UN JOGUET',
         pictos: [
           'situacion2/picto1.png',
@@ -333,7 +399,7 @@ const textos = {
       },
       {
         id: 'emocion1',
-        categoria: 'emociones',
+        categoria: 'emocionajena',
         titulo: 'COM ET SENTS?',
         pictos: [ /* opcional */ ],
         pasos: (() => {
@@ -372,7 +438,7 @@ const textos = {
       },
       {
         id: 'emocion2',
-        categoria: 'emociones',
+        categoria: 'emocionajena',
         titulo: 'PARTIT DE FUTBOL',
         pictos: [ /* opcional */ ],
         pasos: (() => {
