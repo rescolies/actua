@@ -12,22 +12,29 @@ module.exports = async function (context, req) {
   const db       = client.database(process.env.COSMOS_DB_DATABASE)
   const container = db.container(process.env.COSMOS_DB_CONTAINER)
 
-  // Comprueba si ya existe
-  const { resources: existentes } = await container
-    .items
-    .query({ query: 'SELECT * FROM c WHERE c.nombre = @n', parameters: [{ name: '@n', value: nombre }] })
-    .fetchAll()
-
-  if (existentes.length === 0) {
-    // Nuevo alumno
-    await container.items.create({
-      id: nombre,
-      nombre,
-      date: new Date().toISOString(),
-      elecciones: {},
-      respuestas: []
-    })
+// Comprueba si ya existe
+const querySpec = {
+    query: "SELECT * FROM c WHERE c.id = @id",
+    parameters: [{ name: "@id", value: nombre }]
+  };
+  const { resources: existentes } = await container.items
+    .query(querySpec)
+    .fetchAll();
+  
+  if (existentes.length > 0) {
+    context.res = { status: 409, body: 'El alumno ya existe' };
+    return;
   }
+  
+  // Nuevo alumno
+  await container.items.create({
+    id: nombre,
+    nombre,
+    date: new Date().toISOString(),
+    elecciones: {},
+    respuestas: []
+  });
+  
 
   context.res = {
     status: 201,
