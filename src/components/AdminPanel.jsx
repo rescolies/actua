@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react';
 import {
   Box,
   Typography,
@@ -9,34 +9,44 @@ import {
   TableCell,
   TableHead,
   TableRow
-} from '@mui/material'
-import { useActua } from '../context/ActuaContext'
-import textos from '../textos'
+} from '@mui/material';
+import { useActua } from '../context/ActuaContext';
+import textos from '../textos';
 
 export default function AdminPanel() {
-  const { setStage, logout, perfiles, idioma } = useActua()
-  const ui = textos[idioma].ui
-
-  const [data, setData] = useState(null)
-  const [loading, setLoading] = useState(true)
+  const { setStage, logout, perfiles, idioma, isDocente } = useActua();
+  const ui = textos[idioma].ui;
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch('/api/alumnos')
-      .then(res => res.json())
+    if (!isDocente) {
+      setStage('ingreso');
+      return;
+    }
+    fetch('/api/getAlumnos', {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('docente_token')
+      }
+    })
+      .then(res => {
+        if (!res.ok) throw new Error('No autorizado');
+        return res.json();
+      })
       .then(json => setData(json))
       .catch(() => {
-        // fallback a perfiles locales
+        // fallback local
         const arr = Object.entries(perfiles).map(([nombre, p]) => ({
           nombre,
           fechaRegistro: p.date,
           respuestas: p.elecciones
-        }))
-        setData(arr)
+        }));
+        setData(arr);
       })
-      .finally(() => setLoading(false))
-  }, [perfiles])
+      .finally(() => setLoading(false));
+  }, [perfiles, isDocente]);
 
-  if (loading) return <CircularProgress sx={{ mt: 4 }} />
+  if (loading) return <CircularProgress sx={{ mt: 4 }} />;
 
   return (
     <Box sx={{ mt: 2, mb: 4 }}>
@@ -77,5 +87,5 @@ export default function AdminPanel() {
         </TableBody>
       </Table>
     </Box>
-  )
+  );
 }
